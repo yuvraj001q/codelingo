@@ -1,7 +1,9 @@
 "use client";
 
+import { useRef } from "react";
 import { motion } from "framer-motion";
-import { Award } from "lucide-react";
+import { Award, Download } from "lucide-react";
+import { toPng } from "html-to-image";
 
 interface CourseCertificateProps {
   courseName: string;
@@ -10,14 +12,32 @@ interface CourseCertificateProps {
 }
 
 export default function CourseCertificate({ courseName, userName, completedDate }: CourseCertificateProps) {
+  const certRef = useRef<HTMLDivElement>(null);
+
+  const handleDownload = async () => {
+    if (!certRef.current) return;
+    try {
+      const dataUrl = await toPng(certRef.current, { quality: 0.95, pixelRatio: 2 });
+      const link = document.createElement("a");
+      link.download = `CodeLingo-${courseName.replace(/\s+/g, "-")}-Certificate.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch {
+      // fallback: nothing
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 15 }}
-      className="relative mx-auto max-w-md"
+      className="mx-auto max-w-md"
     >
-      <div className="relative rounded-2xl border-2 border-yellow-500/40 bg-gradient-to-br from-yellow-50 via-white to-amber-50 dark:from-yellow-950/20 dark:via-background dark:to-amber-950/20 p-8 text-center shadow-xl overflow-hidden">
+      <div
+        ref={certRef}
+        className="relative rounded-2xl border-2 border-yellow-500/40 bg-gradient-to-br from-yellow-50 via-white to-amber-50 dark:from-yellow-950/20 dark:via-background dark:to-amber-950/20 p-8 text-center shadow-xl overflow-hidden"
+      >
         {/* Decorative corner accents */}
         <div className="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-yellow-500 rounded-tl-2xl" />
         <div className="absolute top-0 right-0 w-16 h-16 border-t-4 border-r-4 border-yellow-500 rounded-tr-2xl" />
@@ -40,6 +60,15 @@ export default function CourseCertificate({ courseName, userName, completedDate 
           </div>
         </div>
       </div>
+
+      <motion.button
+        whileTap={{ scale: 0.95 }}
+        onClick={handleDownload}
+        className="btn-3d-primary mx-auto mt-4 flex items-center gap-2 text-sm"
+      >
+        <Download className="w-4 h-4" />
+        Download Certificate
+      </motion.button>
     </motion.div>
   );
 }
