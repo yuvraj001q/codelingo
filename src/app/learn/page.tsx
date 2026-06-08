@@ -77,7 +77,7 @@ export default function LearnPage() {
   const positions = useMemo(() => {
     return nodes.map((_, i) => {
       const x = sCurveX(i, nodes.length);
-      const y = i * 130 + 70;
+      const y = i * 130 + 110;
       return { x, y };
     });
   }, [nodes]);
@@ -148,7 +148,7 @@ export default function LearnPage() {
           </motion.div>
 
           {nodes.length > 0 && (
-            <div ref={containerRef} className="relative pb-20" style={{ height: positions.length > 0 ? positions[positions.length - 1].y + 180 : 400 }}>
+            <div ref={containerRef} className="relative pt-10 pb-24" style={{ height: positions.length > 0 ? positions[positions.length - 1].y + 200 : 400 }}>
               {/* Curved SVG paths between nodes */}
               <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
                 {positions.map((pos, i) => {
@@ -183,7 +183,7 @@ export default function LearnPage() {
                 return (
                   <div key={node.id}>
                     {isNewUnit && (
-                      <div className="absolute z-20" style={{ left: "50%", top: pos.y - 55, transform: "translateX(-50%)" }}>
+                      <div className="absolute z-20" style={{ left: "50%", top: pos.y - 65, transform: "translateX(-50%)" }}>
                         <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-secondary border shadow-sm">
                           <Map className="w-4 h-4 text-primary" />
                           <span className="text-sm font-semibold">{node.unitTitle}</span>
@@ -204,7 +204,7 @@ export default function LearnPage() {
 
               {/* Certificate when all lessons completed */}
               {allCompleted && (
-                <div className="absolute z-10" style={{ left: "50%", top: positions[positions.length - 1].y + 100, transform: "translateX(-50%)" }}>
+                <div className="absolute z-10" style={{ left: "50%", top: positions[positions.length - 1].y + 110, transform: "translateX(-50%)" }}>
                   <CourseCertificate
                     courseName={courseName}
                     userName={userName}
@@ -215,7 +215,7 @@ export default function LearnPage() {
 
               {/* Finish flag when not all completed */}
               {!allCompleted && (
-                <div className="absolute z-10" style={{ left: "50%", top: positions[positions.length - 1].y + 90, transform: "translateX(-50%)" }}>
+                <div className="absolute z-10" style={{ left: "50%", top: positions[positions.length - 1].y + 100, transform: "translateX(-50%)" }}>
                   <div className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-accent/10 border border-accent/20 text-accent">
                     <Trophy className="w-5 h-5" />
                     <span className="font-bold">Finish Line</span>
