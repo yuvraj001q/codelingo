@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Flame, Trophy, Code2, LogOut, Save, Eye, EyeOff } from "lucide-react";
+import { Flame, Code2, LogOut, Save, Eye, EyeOff } from "lucide-react";
 import AuthGuard from "@/components/AuthGuard";
 import Navigation from "@/components/Navigation";
 import ThemeToggle from "@/components/ThemeToggle";
+import TierEmblem from "@/components/ui/TierEmblem";
 import { useStore } from "@/lib/store";
 import { formatXp, getLeagueEmoji, getLeagueProgress, getStreakData } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -93,8 +94,8 @@ export default function ProfilePage() {
           className="py-8"
         >
           <div className="text-center mb-8">
-            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <User className="w-10 h-10 text-primary" />
+            <div className="mx-auto mb-4">
+              <TierEmblem tier={leagueInfo.current} size="lg" animate />
             </div>
             <h1 className="text-2xl font-bold">{user?.username || "Coder"}</h1>
             <p className="text-muted-foreground">
@@ -123,8 +124,9 @@ export default function ProfilePage() {
               <p className="text-xs text-muted-foreground">Day Streak</p>
             </div>
             <div className="card-bouncy p-4 text-center">
-              <Trophy className="w-6 h-6 text-yellow-500 mx-auto mb-2" />
-              <p className="text-2xl font-bold">{getLeagueEmoji(leagueInfo.current)}</p>
+              <div className="mx-auto mb-2">
+                <TierEmblem tier={leagueInfo.current} size="sm" animate />
+              </div>
               <p className="text-xs text-muted-foreground">League</p>
             </div>
           </div>

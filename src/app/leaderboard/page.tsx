@@ -5,8 +5,9 @@ import { motion } from "framer-motion";
 import { Trophy, Medal, TrendingDown, TrendingUp } from "lucide-react";
 import AuthGuard from "@/components/AuthGuard";
 import Navigation from "@/components/Navigation";
+import TierEmblem from "@/components/ui/TierEmblem";
 import { useStore } from "@/lib/store";
-import { formatXp, getLeagueEmoji } from "@/lib/utils";
+import { formatXp } from "@/lib/utils";
 
 interface LeaderboardEntry {
   id: string;
@@ -73,8 +74,9 @@ export default function LeaderboardPage() {
           <div className="text-center mb-8">
             <Trophy className="w-12 h-12 text-primary mx-auto mb-2" />
             <h1 className="text-3xl font-bold mb-1">Leaderboard</h1>
-            <p className="text-muted-foreground">
-              {getLeagueEmoji(userLeague)} {userLeague} League
+            <p className="text-muted-foreground flex items-center justify-center gap-2">
+              <TierEmblem tier={userLeague} size="sm" />
+              {userLeague} League
             </p>
           </div>
 
@@ -129,8 +131,9 @@ export default function LeaderboardPage() {
                               </span>
                             )}
                           </p>
-                          <p className="text-xs text-muted-foreground">
-                            {getLeagueEmoji(entry.league)} {entry.league}
+                          <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                            <TierEmblem tier={entry.league} size="sm" />
+                            {entry.league}
                           </p>
                         </div>
 
