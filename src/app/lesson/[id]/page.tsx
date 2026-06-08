@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Check, RefreshCw, ChevronRight, Flame } from "lucide-react";
 import AIMascot from "@/components/ui/AIMascot";
+import CodeBuddy from "@/components/ui/CodeBuddy";
 import { useStore } from "@/lib/store";
 import { getLessonContent } from "@/lib/curriculum";
 import ProgressBar from "@/components/ui/ProgressBar";
@@ -35,6 +36,30 @@ export default function LessonPage() {
   const [aiHint, setAiHint] = useState("");
   const [streak, setStreak] = useState(0);
   const [streakPopup, setStreakPopup] = useState(0);
+  const [codeBuddyState, setCodeBuddyState] = useState<"idle" | "success" | "error" | "thinking" | "coding">("idle");
+  const [lastInteraction, setLastInteraction] = useState(Date.now());
+
+  useEffect(() => {
+    const handler = () => setLastInteraction(Date.now());
+    window.addEventListener("mousedown", handler);
+    window.addEventListener("keydown", handler);
+    return () => {
+      window.removeEventListener("mousedown", handler);
+      window.removeEventListener("keydown", handler);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (phase !== "quiz") return;
+    const interval = setInterval(() => {
+      if (Date.now() - lastInteraction > 15000) {
+        setCodeBuddyState("thinking");
+      } else if (feedback === "none") {
+        setCodeBuddyState("idle");
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [phase, lastInteraction, feedback]);
 
   useEffect(() => {
     const courseId = (params.id as string).split("-u")[0];
@@ -101,6 +126,7 @@ export default function LessonPage() {
 
     if (correct) {
       setFeedback("correct");
+      setCodeBuddyState("success");
       playSound(true);
       setAiHint("");
       const newStreak = streak + 1;
@@ -129,6 +155,7 @@ export default function LessonPage() {
       }
     } else {
       setFeedback("incorrect");
+      setCodeBuddyState("error");
       playSound(false);
       setStreak(0);
     }
@@ -361,9 +388,12 @@ export default function LessonPage() {
               className="flex-1 flex flex-col py-6"
             >
               <div className="mb-6">
-                <span className="text-xs font-medium uppercase tracking-wider text-primary mb-2 block">
-                  Quiz • {queue.length} remaining
-                </span>
+                <div className="flex items-start justify-between mb-2">
+                  <span className="text-xs font-medium uppercase tracking-wider text-primary">
+                    Quiz • {queue.length} remaining
+                  </span>
+                  <CodeBuddy state={codeBuddyState} size="sm" />
+                </div>
                 <h2 className="text-xl font-bold">{currentExercise.question}</h2>
               </div>
 
@@ -472,8 +502,9 @@ export default function LessonPage() {
                 className="mb-3 p-3 md:p-4 rounded-xl bg-accent/10 border border-accent/30 relative overflow-hidden"
               >
                 <div className="flex items-center gap-2 mb-1">
-                  <Check className="w-4 md:w-5 h-4 md:h-5 text-accent" />
+                  <Check className="w-4 md:w-5 h-4 md:h-5 text-accent shrink-0" />
                   <span className="font-bold text-sm md:text-base text-accent">Correct!</span>
+                  <CodeBuddy state="success" size="sm" className="ml-auto" />
                 </div>
                 <p className="text-xs md:text-sm text-muted-foreground">
                   {currentExercise?.explanation}
@@ -506,8 +537,9 @@ export default function LessonPage() {
                 className="mb-3 p-3 md:p-4 rounded-xl bg-destructive/10 border border-destructive/30"
               >
                 <div className="flex items-center gap-2">
-                  <RefreshCw className="w-4 md:w-5 h-4 md:h-5 text-destructive" />
+                  <RefreshCw className="w-4 md:w-5 h-4 md:h-5 text-destructive shrink-0" />
                   <span className="font-bold text-sm md:text-base text-destructive">Not quite — try again</span>
+                  <CodeBuddy state="error" size="sm" className="ml-auto" />
                 </div>
               </motion.div>
             )}

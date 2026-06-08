@@ -7,6 +7,7 @@ import { BookOpen, Flame, Zap, Trophy, Map } from "lucide-react";
 import AuthGuard from "@/components/AuthGuard";
 import Navigation from "@/components/Navigation";
 import AIMascot from "@/components/ui/AIMascot";
+import CodeBuddy from "@/components/ui/CodeBuddy";
 import HexNode from "@/components/ui/HexNode";
 import CourseCertificate from "@/components/ui/CourseCertificate";
 import { useStore } from "@/lib/store";
@@ -227,6 +228,7 @@ export default function LearnPage() {
                     <Trophy className="w-5 h-5" />
                     <span className="font-bold">Finish Line</span>
                   </div>
+                  <CodeBuddy state="idle" size="lg" className="mt-6" />
                 </div>
               )}
             </div>

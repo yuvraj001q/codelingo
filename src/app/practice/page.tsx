@@ -20,6 +20,7 @@ import ProgressBar from "@/components/ui/ProgressBar";
 import CodeBlock from "@/components/ui/CodeBlock";
 import SyntaxDrag from "@/components/ui/SyntaxDrag";
 import AIMascot from "@/components/ui/AIMascot";
+import CodeBuddy from "@/components/ui/CodeBuddy";
 import { useStore } from "@/lib/store";
 import { curriculum } from "@/lib/curriculum";
 import type { Exercise } from "@/lib/types";
@@ -408,7 +409,7 @@ export default function PracticePage() {
 
       {mistakes.length === 0 ? (
         <div className="text-center py-16">
-          <Check className="w-16 h-16 text-accent/60 mx-auto mb-4" />
+          <CodeBuddy state="coding" size="lg" className="mx-auto mb-4" message="No bugs found! You're writing clean code." />
           <h2 className="text-xl font-bold mb-2">No Mistakes!</h2>
           <p className="text-muted-foreground">
             You&apos;re doing great — all mistakes have been corrected!
