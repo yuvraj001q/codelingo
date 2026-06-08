@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { BookOpen, Flame, Zap, Trophy, Map } from "lucide-react";
@@ -22,11 +22,17 @@ interface JourneyLesson {
 
 const lessonTypes: string[] = ["challenge", "quiz", "challenge", "mastery", "challenge", "quiz", "challenge", "project", "challenge", "quiz", "challenge", "challenge"];
 
+function hashRange(index: number, min: number, max: number): number {
+  const x = Math.sin(index * 12.9898) * 43758.5453;
+  return min + (x - Math.floor(x)) * (max - min);
+}
+
 export default function LearnPage() {
   const router = useRouter();
   const { activeCourse } = useStore();
   const [nodes, setNodes] = useState<JourneyLesson[]>([]);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!activeCourse) {
@@ -67,6 +73,15 @@ export default function LearnPage() {
     setNodes(lessonNodes);
   }, [activeCourse]);
 
+  const positions = useMemo(() => {
+    return nodes.map((_, i) => {
+      const x = hashRange(i * 3 + 1, 12, 82);
+      const yOffset = hashRange(i * 7 + 5, -15, 15);
+      const y = i * 120 + 60 + yOffset;
+      return { x, y };
+    });
+  }, [nodes]);
+
   const getNodeState = (id: string) => {
     if (completedLessons.has(id)) return "completed" as const;
     const idx = nodes.findIndex((n) => n.id === id);
@@ -80,13 +95,14 @@ export default function LearnPage() {
   const streak = getStreakData();
   const completedCount = completedLessons.size;
 
+  if (!activeCourse) return null;
+
   return (
     <AuthGuard>
       <Navigation />
       <div className="min-h-screen pb-24 md:pt-20">
         <div className="max-w-5xl mx-auto px-4">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="py-6">
-            {/* Header Stats Bar */}
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h1 className="text-2xl font-bold">{activeCourse?.language_name || "Select a Course"}</h1>
@@ -108,7 +124,6 @@ export default function LearnPage() {
               </div>
             </div>
 
-            {/* Progress Summary */}
             <div className="flex items-center gap-3 mb-8">
               <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden">
                 <motion.div
@@ -122,52 +137,57 @@ export default function LearnPage() {
               </span>
             </div>
 
-            {/* Journey Header */}
             <div className="text-center mb-8">
               <AIMascot size="md" mood="happy" message={`${completedCount} lessons down — keep going!`} className="mx-auto" />
             </div>
           </motion.div>
 
-          {/* No Course Fallback */}
-          {!activeCourse && (
-            <div className="text-center py-20">
-              <BookOpen className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
-              <p className="text-lg text-muted-foreground">
-                No course selected.{" "}
-                <button onClick={() => router.push("/courses")} className="text-primary font-medium hover:underline">
-                  Browse courses
-                </button>
-              </p>
-            </div>
-          )}
+          {nodes.length > 0 && (
+            <div ref={containerRef} className="relative pb-20" style={{ height: nodes.length * 120 + 120 }}>
+              {/* SVG connector lines */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
+                {positions.map((pos, i) => {
+                  if (i === 0) return null;
+                  const prev = positions[i - 1];
+                  return (
+                    <line
+                      key={i}
+                      x1={`${prev.x}%`}
+                      y1={prev.y}
+                      x2={`${pos.x}%`}
+                      y2={pos.y}
+                      stroke="hsl(var(--border))"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
+                  );
+                })}
+              </svg>
 
-          {/* Hexagon Journey Map */}
-          {activeCourse && nodes.length > 0 && (
-            <div className="relative pb-12">
-              {/* Central spine line */}
-              <div className="absolute left-1/2 top-0 bottom-0 w-0.5 -translate-x-1/2">
-                <svg className="w-full h-full">
-                  <line x1="0" y1="0" x2="0" y2="100%" stroke="hsl(var(--border))" strokeWidth="2" strokeDasharray="6 6" />
-                </svg>
-              </div>
-
+              {/* Unit badges + Nodes */}
               {nodes.map((node, i) => {
                 const isNewUnit = i === 0 || node.unitIndex !== nodes[i - 1].unitIndex;
                 const state = getNodeState(node.id);
+                const pos = positions[i];
 
                 return (
                   <div key={node.id}>
                     {isNewUnit && (
-                      <div className="relative z-10 text-center py-8">
+                      <div
+                        className="absolute z-20"
+                        style={{ left: "50%", top: pos.y - 50, transform: "translateX(-50%)" }}
+                      >
                         <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-secondary border shadow-sm">
                           <Map className="w-4 h-4 text-primary" />
                           <span className="text-sm font-semibold">{node.unitTitle}</span>
                         </div>
                       </div>
                     )}
-                    <div className="relative z-10 flex justify-center py-2">
+                    <div
+                      className="absolute z-10"
+                      style={{ left: `${pos.x}%`, top: pos.y, transform: "translate(-50%, -50%)" }}
+                    >
                       <HexNode
-                        index={i}
                         title={node.title}
                         state={state}
                         lessonType={node.type}
@@ -178,8 +198,8 @@ export default function LearnPage() {
                 );
               })}
 
-              {/* Finish flag at the end */}
-              <div className="relative z-10 text-center pt-8">
+              {/* Finish flag */}
+              <div className="absolute z-10" style={{ left: "50%", top: nodes.length * 120 + 80, transform: "translateX(-50%)" }}>
                 <div className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-accent/10 border border-accent/20 text-accent">
                   <Trophy className="w-5 h-5" />
                   <span className="font-bold">Course Complete!</span>
@@ -188,7 +208,6 @@ export default function LearnPage() {
             </div>
           )}
 
-          {/* No Lessons Fallback */}
           {activeCourse && nodes.length === 0 && (
             <div className="text-center py-20">
               <BookOpen className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
