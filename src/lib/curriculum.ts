@@ -1,7 +1,8 @@
-import type { Exercise } from "./types";
+import type { ContentItem, Exercise } from "./types";
 
 interface LessonExercises {
   lessonId: string;
+  content?: ContentItem[];
   exercises: Exercise[];
 }
 
@@ -9,6 +10,24 @@ export const curriculum: Record<string, LessonExercises[]> = {
   python: [
     {
       lessonId: "python-u0-l0",
+      content: [
+        {
+          id: "py-intro-content-1",
+          title: "What is Python?",
+          body: "Python is a high-level, interpreted programming language created by Guido van Rossum in 1991. It emphasizes code readability with its clean syntax and indentation-based blocks. Python is used everywhere: web development, data science, AI, automation, and more.",
+        },
+        {
+          id: "py-intro-content-2",
+          title: "Why Learn Python?",
+          body: "Python is the #1 language for beginners because of its simple, English-like syntax. You can write powerful programs with fewer lines of code compared to C++ or Java. It has a huge community and thousands of free libraries.",
+          code_snippet: "# This is a Python comment\n# Python uses indentation, not braces\nprint(\"Hello, World!\")",
+        },
+        {
+          id: "py-intro-content-3",
+          title: "How Python Runs",
+          body: "Python is an interpreted language — you write code in .py files and the Python interpreter executes it line by line. No compilation step needed. This makes development fast and interactive.",
+        },
+      ],
       exercises: [
         {
           id: "py-intro-1",
@@ -73,6 +92,25 @@ export const curriculum: Record<string, LessonExercises[]> = {
     },
     {
       lessonId: "python-u0-l1",
+      content: [
+        {
+          id: "py-first-content-1",
+          title: "Your First Python Program",
+          body: "Every Python journey starts with print(). The print() function displays output to the console. You give it a value inside parentheses, and it shows that value on screen.",
+          code_snippet: 'print("Hello, World!")\n# Output: Hello, World!\nprint(42)\n# Output: 42',
+        },
+        {
+          id: "py-first-content-2",
+          title: "Comments in Python",
+          body: "Comments are notes in your code that Python ignores. Use # for single-line comments. They help you and others understand what the code does.",
+          code_snippet: '# This is a comment\nprint("This runs")  # Inline comment\n# Comments are great for explaining "why" not "what"',
+        },
+        {
+          id: "py-first-content-3",
+          title: "Running Python Code",
+          body: 'Save your code in a .py file and run it with: python filename.py. You can also use the interactive Python REPL by typing "python" in your terminal.',
+        },
+      ],
       exercises: [
         {
           id: "py-first-1",
@@ -1802,17 +1840,24 @@ export const curriculum: Record<string, LessonExercises[]> = {
   ],
 };
 
+export function getLessonContent(courseId: string, lessonId: string): {
+  content: ContentItem[];
+  exercises: Exercise[];
+} {
+  const courseExercises = curriculum[courseId];
+  if (!courseExercises) return { content: [], exercises: [] };
+  const found = courseExercises.find((le) => le.lessonId === lessonId);
+  if (found) return { content: found.content ?? [], exercises: found.exercises || [] };
+  const allExercises = courseExercises.flatMap((le) => le.exercises);
+  return { content: [], exercises: allExercises.slice(0, 4) };
+}
+
 export function getExercisesForLesson(
   courseId: string,
   lessonId: string
 ): Exercise[] {
-  const courseExercises = curriculum[courseId];
-  if (!courseExercises) return [];
-  const found = courseExercises.find((le) => le.lessonId === lessonId);
-  if (found) return found.exercises;
-
-  const allExercises = courseExercises.flatMap((le) => le.exercises);
-  return allExercises.slice(0, 4);
+  const { exercises } = getLessonContent(courseId, lessonId);
+  return exercises;
 }
 
 export function getAllExerciseIds(): string[] {

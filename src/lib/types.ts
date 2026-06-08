@@ -34,6 +34,14 @@ export interface Lesson {
   title: string;
 }
 
+export interface ContentItem {
+  id: string;
+  title: string;
+  body: string;
+  code_snippet?: string;
+  language?: string;
+}
+
 export interface Exercise {
   id: string;
   lesson_id: string;
