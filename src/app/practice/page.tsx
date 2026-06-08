@@ -6,6 +6,7 @@ import { Target, Check, RefreshCw } from "lucide-react";
 import AuthGuard from "@/components/AuthGuard";
 import Navigation from "@/components/Navigation";
 import ProgressBar from "@/components/ui/ProgressBar";
+import CodeBlock from "@/components/ui/CodeBlock";
 import { useStore } from "@/lib/store";
 import { curriculum } from "@/lib/curriculum";
 import type { Exercise } from "@/lib/types";
@@ -125,11 +126,7 @@ export default function PracticePage() {
                 </div>
 
                 {currentExercise.code_snippet && (
-                  <pre className="bg-muted p-4 rounded-xl mb-6 overflow-x-auto">
-                    <code className="text-sm">
-                      {currentExercise.code_snippet}
-                    </code>
-                  </pre>
+                  <CodeBlock code={currentExercise.code_snippet} />
                 )}
 
                 {currentExercise.type === "fill_blank" ? (

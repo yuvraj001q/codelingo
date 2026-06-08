@@ -6,13 +6,21 @@ import AuthGuard from "@/components/AuthGuard";
 import Navigation from "@/components/Navigation";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useStore } from "@/lib/store";
-import { formatXp, getLeagueEmoji } from "@/lib/utils";
+import { formatXp, getLeagueEmoji, getLeagueProgress, getStreakData } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import ProgressBar from "@/components/ui/ProgressBar";
 
 export default function ProfilePage() {
   const { user } = useStore();
   const router = useRouter();
+
+  const totalXp = parseInt(
+    localStorage.getItem("opencodeLingo_totalXp") || "0",
+    10
+  );
+  const streak = getStreakData();
+  const leagueInfo = getLeagueProgress(totalXp);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -36,24 +44,33 @@ export default function ProfilePage() {
             </div>
             <h1 className="text-2xl font-bold">{user?.username || "Coder"}</h1>
             <p className="text-muted-foreground">
-              {getLeagueEmoji(user?.league || "Bronze")} {user?.league || "Bronze"} League
+              {getLeagueEmoji(leagueInfo.current)} {leagueInfo.current} League
             </p>
+            {leagueInfo.next && (
+              <div className="mt-3 max-w-xs mx-auto">
+                <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                  <span>{leagueInfo.current}</span>
+                  <span>{leagueInfo.next}</span>
+                </div>
+                <ProgressBar value={leagueInfo.progress * 100} />
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-3 gap-4 mb-8">
             <div className="card-bouncy p-4 text-center">
               <Code2 className="w-6 h-6 text-primary mx-auto mb-2" />
-              <p className="text-2xl font-bold">{formatXp(user?.total_xp || 0)}</p>
+              <p className="text-2xl font-bold">{formatXp(totalXp)}</p>
               <p className="text-xs text-muted-foreground">Total XP</p>
             </div>
             <div className="card-bouncy p-4 text-center">
               <Flame className="w-6 h-6 text-orange-500 mx-auto mb-2" />
-              <p className="text-2xl font-bold">{user?.streak_days || 0}</p>
+              <p className="text-2xl font-bold">{streak.days}</p>
               <p className="text-xs text-muted-foreground">Day Streak</p>
             </div>
             <div className="card-bouncy p-4 text-center">
               <Trophy className="w-6 h-6 text-yellow-500 mx-auto mb-2" />
-              <p className="text-2xl font-bold">{getLeagueEmoji(user?.league || "Bronze")}</p>
+              <p className="text-2xl font-bold">{getLeagueEmoji(leagueInfo.current)}</p>
               <p className="text-xs text-muted-foreground">League</p>
             </div>
           </div>

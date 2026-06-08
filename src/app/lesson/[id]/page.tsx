@@ -8,7 +8,10 @@ import { useStore } from "@/lib/store";
 import { getExercisesForLesson } from "@/lib/curriculum";
 import ProgressBar from "@/components/ui/ProgressBar";
 import FlashCard from "@/components/ui/FlashCard";
+import CodeBlock from "@/components/ui/CodeBlock";
+import SyntaxDrag from "@/components/ui/SyntaxDrag";
 import type { Exercise } from "@/lib/types";
+import { updateStreak } from "@/lib/utils";
 
 type FeedbackState = "none" | "correct" | "incorrect";
 
@@ -89,6 +92,13 @@ export default function LessonPage() {
     if (feedback === "correct") {
       const xpGain = (currentExercise?.difficulty || 1) * 10;
       addXp(xpGain);
+
+      const totalXp = parseInt(localStorage.getItem("opencodeLingo_totalXp") || "0", 10);
+      localStorage.setItem("opencodeLingo_totalXp", String(totalXp + xpGain));
+
+      if (currentIndex === exercises.length - 1) {
+        updateStreak();
+      }
 
       const completed = JSON.parse(
         localStorage.getItem("opencodeLingo_completedLessons") || "[]"
@@ -180,9 +190,7 @@ export default function LessonPage() {
             </div>
 
             {currentExercise.code_snippet && (
-              <pre className="bg-muted p-4 rounded-xl mb-6 overflow-x-auto">
-                <code className="text-sm">{currentExercise.code_snippet}</code>
-              </pre>
+              <CodeBlock code={currentExercise.code_snippet} />
             )}
 
             {currentExercise.type === "concept" && (
@@ -236,26 +244,13 @@ export default function LessonPage() {
             )}
 
             {currentExercise.type === "syntax_drag" && (
-              <div className="space-y-2 mt-4">
-                {dragOrder.map((item, i) => (
-                  <motion.div
-                    key={item}
-                    layout
-                    draggable
-                    onDragStart={() => {}}
-                    onDragOver={(e) => e.preventDefault()}
-                    onDrop={() => {
-                      const newOrder = [...dragOrder];
-                      const idx = newOrder.indexOf(item);
-                      newOrder.splice(idx, 1);
-                      newOrder.splice(i, 0, item);
-                      setDragOrder(newOrder);
-                    }}
-                    className="p-3 rounded-xl bg-muted border-2 border-border cursor-grab active:cursor-grabbing font-mono text-sm"
-                  >
-                    {item}
-                  </motion.div>
-                ))}
+              <div className="mt-4">
+                <SyntaxDrag
+                  blocks={currentExercise.options || []}
+                  onOrderChange={(order) => {
+                    setDragOrder(order);
+                  }}
+                />
               </div>
             )}
           </motion.div>

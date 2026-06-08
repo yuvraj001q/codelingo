@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import { useStore } from "@/lib/store";
-import { formatXp, getLeagueEmoji } from "@/lib/utils";
+import { formatXp, getLeagueEmoji, getStreakData } from "@/lib/utils";
 
 const navItems = [
   { href: "/learn", label: "Learn", icon: BookOpen },
@@ -71,7 +71,18 @@ export default function Navigation() {
             {user && (
               <div className="flex items-center gap-2 text-sm font-medium">
                 <span>{getLeagueEmoji(user.league)}</span>
-                <span className="text-muted-foreground">{formatXp(user.total_xp)} XP</span>
+                <span className="text-muted-foreground">
+                  {formatXp(
+                    parseInt(
+                      localStorage.getItem("opencodeLingo_totalXp") || "0",
+                      10
+                    )
+                  )}{" "}
+                  XP
+                </span>
+                <span className="text-orange-500">
+                  🔥 {getStreakData().days}
+                </span>
               </div>
             )}
           </div>
