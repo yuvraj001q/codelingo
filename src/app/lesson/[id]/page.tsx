@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Check, RefreshCw, ChevronRight } from "lucide-react";
+import { X, Sparkles, Check, RefreshCw, ChevronRight, Flame } from "lucide-react";
 import AIMascot from "@/components/ui/AIMascot";
 import { useStore } from "@/lib/store";
 import { getLessonContent } from "@/lib/curriculum";
@@ -32,6 +32,8 @@ export default function LessonPage() {
   const [dragOrder, setDragOrder] = useState<string[]>([]);
   const [showCelebration, setShowCelebration] = useState(false);
   const [aiHint, setAiHint] = useState("");
+  const [streak, setStreak] = useState(0);
+  const [streakPopup, setStreakPopup] = useState(0);
 
   useEffect(() => {
     const courseId = (params.id as string).split("-u")[0];
@@ -94,6 +96,10 @@ export default function LessonPage() {
       setFeedback("correct");
       playSound(true);
       setAiHint("");
+      const newStreak = streak + 1;
+      setStreak(newStreak);
+      setStreakPopup(newStreak);
+      setTimeout(() => setStreakPopup(0), 1200);
       // Fire AI for semantic check (non-blocking, enhances UX)
       if (currentExercise.type === "fill_blank") {
         fetch("/api/evaluate", {
@@ -117,13 +123,16 @@ export default function LessonPage() {
     } else {
       setFeedback("incorrect");
       playSound(false);
+      setStreak(0);
     }
   };
 
   const doNext = () => {
     if (feedback !== "correct") return;
 
-    const xpGain = (currentExercise?.difficulty || 1) * 10;
+    const bonusMultiplier = 1 + Math.min(streak - 1, 5) * 0.2;
+    const baseXp = (currentExercise?.difficulty || 1) * 10;
+    const xpGain = Math.round(baseXp * bonusMultiplier);
     addXp(xpGain);
 
     const totalXp = parseInt(localStorage.getItem("opencodeLingo_totalXp") || "0", 10);
@@ -207,6 +216,17 @@ export default function LessonPage() {
         <div className="flex-1">
           <ProgressBar value={progress * 100} />
         </div>
+        {phase === "quiz" && streak > 0 && (
+          <motion.div
+            key={streak}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="flex items-center gap-1.5 mr-3"
+          >
+            <Flame className={`w-5 h-5 ${streak >= 3 ? "text-orange-500" : "text-orange-400"}`} />
+            <span className="text-sm font-extrabold text-orange-500">{streak}</span>
+          </motion.div>
+        )}
         <span className="text-sm font-medium text-muted-foreground">
           {phase === "learn"
             ? `Learn ${contentIndex + 1}/${contentItems.length}`
@@ -415,7 +435,7 @@ export default function LessonPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                className="mb-4 p-4 rounded-xl bg-accent/10 border border-accent/30"
+                className="mb-4 p-4 rounded-xl bg-accent/10 border border-accent/30 relative overflow-hidden"
               >
                 <div className="flex items-center gap-2 mb-1">
                   <Check className="w-5 h-5 text-accent" />
@@ -424,9 +444,24 @@ export default function LessonPage() {
                 <p className="text-sm text-muted-foreground">
                   {currentExercise?.explanation}
                 </p>
-                <p className="text-sm font-medium text-accent mt-1">
-                  +{(currentExercise?.difficulty || 1) * 10} XP
-                </p>
+                <div className="flex items-center gap-3 mt-1">
+                  <p className="text-sm font-medium text-accent">
+                    +{Math.round(((currentExercise?.difficulty || 1) * 10) * (1 + Math.min(streak - 1, 5) * 0.2))} XP
+                    {streak > 1 && <span className="text-orange-500 ml-1">x{1 + Math.min(streak - 1, 5) * 0.2}</span>}
+                  </p>
+                </div>
+                {streakPopup > 0 && (
+                  <motion.div
+                    key={streakPopup}
+                    initial={{ scale: 0.5, opacity: 0, y: 10 }}
+                    animate={{ scale: 1.3, opacity: 1, y: -5 }}
+                    exit={{ scale: 2, opacity: 0, y: -20 }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1"
+                  >
+                    <Flame className="w-6 h-6 text-orange-500" />
+                    <span className="text-lg font-extrabold text-orange-500">{streakPopup}</span>
+                  </motion.div>
+                )}
               </motion.div>
             )}
             {feedback === "incorrect" && (
