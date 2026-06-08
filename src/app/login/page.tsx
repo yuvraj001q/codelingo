@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Code2, Eye, EyeOff } from "lucide-react";
 import { useStore } from "@/lib/store";
+import { syncUserToNeon } from "@/lib/syncUser";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -38,6 +39,7 @@ export default function LoginPage() {
     }
 
     useStore.getState().setUser(user);
+    syncUserToNeon();
     router.push("/learn");
   };
 

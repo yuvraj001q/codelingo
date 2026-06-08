@@ -12,6 +12,7 @@ import CodeBlock from "@/components/ui/CodeBlock";
 import SyntaxDrag from "@/components/ui/SyntaxDrag";
 import type { ContentItem, Exercise } from "@/lib/types";
 import { updateStreak } from "@/lib/utils";
+import { syncUserToNeon } from "@/lib/syncUser";
 
 type Phase = "learn" | "quiz" | "complete";
 
@@ -135,6 +136,7 @@ export default function LessonPage() {
         completed.push(params.id);
         localStorage.setItem("opencodeLingo_completedLessons", JSON.stringify(completed));
       }
+      syncUserToNeon();
       setShowCelebration(true);
       setTimeout(() => {
         localStorage.removeItem("opencodeLingo_currentExercises");
