@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { evaluateAnswer } from "@/lib/evaluateAnswer";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Check, RefreshCw, ChevronRight } from "lucide-react";
@@ -30,6 +31,7 @@ export default function LessonPage() {
   const [filledBlank, setFilledBlank] = useState("");
   const [dragOrder, setDragOrder] = useState<string[]>([]);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     const courseId = (params.id as string).split("-u")[0];
@@ -68,10 +70,13 @@ export default function LessonPage() {
     : contentItems.length + currentIndex;
   const progress = totalSteps > 0 ? currentStep / totalSteps : 0;
 
-  const handleCheck = useCallback(() => {
-    if (!currentExercise) return;
+  const handleCheck = useCallback(async () => {
+    if (!currentExercise || checking) return;
+    setChecking(true);
 
     let isCorrect = false;
+    let explanation = "";
+
     switch (currentExercise.type) {
       case "concept":
         isCorrect = selectedAnswer === "understood";
@@ -79,13 +84,31 @@ export default function LessonPage() {
       case "multiple_choice":
         isCorrect = selectedAnswer === currentExercise.correct_answer;
         break;
-      case "fill_blank":
-        isCorrect = filledBlank.trim().toLowerCase() === currentExercise.correct_answer.toLowerCase();
+      case "fill_blank": {
+        const result = await evaluateAnswer(
+          currentExercise.question,
+          currentExercise.correct_answer,
+          filledBlank,
+          "fill_blank"
+        );
+        isCorrect = result.isCorrect;
+        explanation = result.explanation;
         break;
-      case "syntax_drag":
-        isCorrect = dragOrder.join("\n").trim() === currentExercise.correct_answer.trim();
+      }
+      case "syntax_drag": {
+        const result = await evaluateAnswer(
+          currentExercise.question,
+          currentExercise.correct_answer,
+          dragOrder.join("\n"),
+          "syntax_drag"
+        );
+        isCorrect = result.isCorrect;
+        explanation = result.explanation;
         break;
+      }
     }
+
+    setChecking(false);
 
     if (isCorrect) {
       setFeedback("correct");
@@ -93,8 +116,12 @@ export default function LessonPage() {
     } else {
       setFeedback("incorrect");
       playSound(false);
+      if (explanation) {
+        const el = document.getElementById("ai-explanation");
+        if (el) el.textContent = explanation;
+      }
     }
-  }, [currentExercise, selectedAnswer, filledBlank, dragOrder]);
+  }, [currentExercise, selectedAnswer, filledBlank, dragOrder, checking]);
 
   const handleNext = useCallback(() => {
     if (feedback === "correct") {
@@ -399,6 +426,7 @@ export default function LessonPage() {
                 <p className="text-sm text-muted-foreground">
                   No worries, keep trying. You&apos;ve got this!
                 </p>
+                <p id="ai-explanation" className="text-sm text-muted-foreground mt-1 italic"></p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -408,10 +436,14 @@ export default function LessonPage() {
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 onClick={handleCheck}
-                disabled={!selectedAnswer && !filledBlank && dragOrder.length === 0}
-                className="btn-3d-primary flex-1 text-lg"
+                disabled={(!selectedAnswer && !filledBlank && dragOrder.length === 0) || checking}
+                className="btn-3d-primary flex-1 text-lg flex items-center justify-center gap-2"
               >
-                Check
+                {checking ? (
+                  <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Checking...</>
+                ) : (
+                  "Check"
+                )}
               </motion.button>
             )}
             {feedback === "incorrect" && (

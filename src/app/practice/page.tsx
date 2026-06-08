@@ -11,6 +11,7 @@ import SyntaxDrag from "@/components/ui/SyntaxDrag";
 import AIMascot from "@/components/ui/AIMascot";
 import { useStore } from "@/lib/store";
 import { curriculum, getLessonContent } from "@/lib/curriculum";
+import { evaluateAnswer } from "@/lib/evaluateAnswer";
 import type { ContentItem, Exercise } from "@/lib/types";
 
 type Phase = "learn" | "quiz" | "done";
@@ -59,6 +60,7 @@ export default function PracticePage() {
   const [feedback, setFeedback] = useState<"none" | "correct" | "incorrect">("none");
   const [filledBlank, setFilledBlank] = useState("");
   const [dragOrder, setDragOrder] = useState<string[]>([]);
+  const [checking, setChecking] = useState(false);
   const [mascotMsg, setMascotMsg] = useState("");
 
   useEffect(() => {
@@ -110,10 +112,12 @@ export default function PracticePage() {
     : contentItems.length + currentIndex;
   const progress = totalSteps > 0 ? currentStep / totalSteps : 0;
 
-  const handleCheck = () => {
-    if (!currentExercise) return;
+  const handleCheck = async () => {
+    if (!currentExercise || checking) return;
+    setChecking(true);
 
     let isCorrect = false;
+
     switch (currentExercise.type) {
       case "concept":
         isCorrect = selectedAnswer === "understood";
@@ -121,13 +125,33 @@ export default function PracticePage() {
       case "multiple_choice":
         isCorrect = selectedAnswer === currentExercise.correct_answer;
         break;
-      case "fill_blank":
-        isCorrect = filledBlank.trim().toLowerCase() === currentExercise.correct_answer.toLowerCase();
+      case "fill_blank": {
+        const result = await evaluateAnswer(
+          currentExercise.question,
+          currentExercise.correct_answer,
+          filledBlank,
+          "fill_blank"
+        );
+        isCorrect = result.isCorrect;
+        if (!isCorrect && result.explanation) {
+          const el = document.getElementById("practice-ai-explanation");
+          if (el) el.textContent = result.explanation;
+        }
         break;
-      case "syntax_drag":
-        isCorrect = dragOrder.join("\n").trim() === currentExercise.correct_answer.trim();
+      }
+      case "syntax_drag": {
+        const result = await evaluateAnswer(
+          currentExercise.question,
+          currentExercise.correct_answer,
+          dragOrder.join("\n"),
+          "syntax_drag"
+        );
+        isCorrect = result.isCorrect;
         break;
+      }
     }
+
+    setChecking(false);
 
     if (isCorrect) {
       setFeedback("correct");
@@ -389,6 +413,7 @@ export default function PracticePage() {
                         <RefreshCw className="w-5 h-5 text-destructive" />
                         <span className="font-bold text-destructive">Keep trying</span>
                       </div>
+                      <p id="practice-ai-explanation" className="text-sm text-muted-foreground mt-1 italic"></p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -398,10 +423,14 @@ export default function PracticePage() {
                     <motion.button
                       whileTap={{ scale: 0.98 }}
                       onClick={handleCheck}
-                      disabled={!selectedAnswer && !filledBlank && dragOrder.length === 0}
-                      className="btn-3d-primary w-full text-lg"
+                      disabled={(!selectedAnswer && !filledBlank && dragOrder.length === 0) || checking}
+                      className="btn-3d-primary w-full text-lg flex items-center justify-center gap-2"
                     >
-                      Check Answer
+                      {checking ? (
+                        <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Checking...</>
+                      ) : (
+                        "Check Answer"
+                      )}
                     </motion.button>
                   )}
                   {feedback === "incorrect" && (
