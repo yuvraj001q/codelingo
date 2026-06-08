@@ -109,9 +109,16 @@ export default function LearnPage() {
         <div className="max-w-5xl mx-auto px-4">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="py-6">
             <div className="flex items-center justify-between mb-6">
-              <div>
-                <h1 className="text-2xl font-bold">{courseName}</h1>
-                <p className="text-sm text-muted-foreground">Your learning journey</p>
+              <div className="flex items-center gap-3">
+                {activeCourse?.icon_svg && (
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 p-2"
+                    dangerouslySetInnerHTML={{ __html: activeCourse.icon_svg }}
+                  />
+                )}
+                <div>
+                  <h1 className="text-2xl font-bold">{courseName}</h1>
+                  <p className="text-sm text-muted-foreground">Your learning journey</p>
+                </div>
               </div>
               <div className="flex items-center gap-4 text-sm">
                 <div className="flex items-center gap-1.5">

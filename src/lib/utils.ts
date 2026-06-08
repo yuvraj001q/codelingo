@@ -125,37 +125,37 @@ export const defaultCourses = [
   {
     id: "python",
     language_name: "Python",
-    icon_svg: `<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#3776AB"/><path d="M12 2C8 2 7 4 7 6h3c0-1 1-2 2-2s2 1 2 2v1H7c-2 0-4 1-4 4s1 4 4 4h2v-2c0-2 2-3 4-3h2c2 0 4-1 4-4s-2-4-4-4zM10 5c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1z" fill="white"/><path d="M17 10v2c0 2-2 3-4 3h-2c-2 0-4 1-4 4s2 4 4 4h2c3 0 4-2 4-4h-3c0 1-1 2-2 2s-2-1-2-2v-1h5c2 0 4-1 4-4s-2-4-4-4zm-1 4c.6 0 1 .4 1 1s-.4 1-1 1-1-.4-1-1 .4-1 1-1z" fill="white"/></svg>`,
+    icon_svg: `<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#306998"/><path d="M15.5 3C13 3 12 4.5 12 6H9c-2.5 0-4 1.8-4 4s1.5 4 4 4h2v-2c0-2 2-3 4-3h2c2 0 3.5-1.5 3.5-3.5S17.5 3 15.5 3zm-2 3c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1z" fill="#FFD43B"/><path d="M8.5 21c2.5 0 3.5-1.5 3.5-3h3c2.5 0 4-1.8 4-4s-1.5-4-4-4h-2v2c0 2-2 3-4 3H7c-2 0-3.5 1.5-3.5 3.5S5 21 8.5 21zm2-3c.6 0 1 .4 1 1s-.4 1-1 1-1-.4-1-1 .4-1 1-1z" fill="#FFD43B"/></svg>`,
     theme_color: "#3776AB",
   },
   {
     id: "javascript",
     language_name: "JavaScript",
-    icon_svg: `<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#F7DF1E"/><path d="M5 3h14v18H5V3zm9 14c1.5 0 2.5-.8 2.5-2 0-1-.5-1.5-1.5-2l-1-.5c-.7-.3-1-.7-1-1.2 0-.7.6-1.2 1.4-1.2.8 0 1.3.4 1.6.8l1.2-.8c-.5-.8-1.3-1.4-2.8-1.4-1.6 0-2.6.9-2.6 2.2 0 1 .5 1.6 1.3 2l1 .5c.7.3 1.1.7 1.1 1.3 0 .7-.6 1.2-1.5 1.2s-1.5-.4-1.9-.9l-1.2.8c.5.9 1.5 1.5 3.1 1.5zm-5 0c.4 0 .8-.1 1-.2v-2.2c-.3.1-.5.1-.8.1-.8 0-1.2-.4-1.2-1.2v-2.5H7v2.7c0 1.6.8 2.5 2 2.5z" fill="#000"/></svg>`,
+    icon_svg: `<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#F7DF1E"/><text x="12" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="12" fill="#000">JS</text></svg>`,
     theme_color: "#F7DF1E",
   },
   {
     id: "rust",
     language_name: "Rust",
-    icon_svg: `<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#DEA584"/><path d="M12 2L2 7v10l10 5 10-5V7l-10-5zm0 2.5l7 3.5v7l-7 3.5-7-3.5v-7l7-3.5z" fill="white"/><circle cx="12" cy="12" r="4" fill="white"/></svg>`,
+    icon_svg: `<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#DEA584"/><circle cx="12" cy="12" r="7" stroke="white" stroke-width="1.5" fill="none"/><circle cx="12" cy="12" r="3" fill="white"/><line x1="12" y1="5" x2="12" y2="9" stroke="white" stroke-width="1.5"/><line x1="12" y1="15" x2="12" y2="19" stroke="white" stroke-width="1.5"/><line x1="5" y1="12" x2="9" y2="12" stroke="white" stroke-width="1.5"/><line x1="15" y1="12" x2="19" y2="12" stroke="white" stroke-width="1.5"/></svg>`,
     theme_color: "#DEA584",
   },
   {
     id: "cpp",
     language_name: "C++",
-    icon_svg: `<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#00599C"/><path d="M12 2L2 7v10l10 5 10-5V7l-10-5zm0 2.5l7 3.5v7l-7 3.5-7-3.5v-7l7-3.5z" fill="white"/><path d="M8 12c0-2.2 1.8-4 4-4 1.5 0 2.8.8 3.5 2l-1.7 1c-.3-.6-1-1-1.8-1-1.1 0-2 .9-2 2s.9 2 2 2c.8 0 1.5-.4 1.8-1l1.7 1c-.7 1.2-2 2-3.5 2-2.2 0-4-1.8-4-4z" fill="#00599C"/><path d="M14 11h1v1h1v-1h1v-1h-1V9h-1v1h-1v1zm3 0h1v1h1v-1h1v-1h-1V9h-1v1h-1v1z" fill="#00599C"/></svg>`,
+    icon_svg: `<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#00599C"/><text x="8" y="16" font-family="Arial,sans-serif" font-weight="bold" font-size="11" fill="white">C</text><text x="14" y="16" font-family="Arial,sans-serif" font-weight="bold" font-size="11" fill="white">++</text></svg>`,
     theme_color: "#00599C",
   },
   {
     id: "go",
     language_name: "Go",
-    icon_svg: `<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#00ADD8"/><path d="M6 15c0 .6-.4 1-1 1s-1-.4-1-1 .4-1 1-1 1 .4 1 1zm14-1c0 .6-.4 1-1 1s-1-.4-1-1 .4-1 1-1 1 .4 1 1z" fill="white"/><path d="M12 5C7 5 3 7 3 12c0 2 1 4 2 5l2-1c-1-1-1.5-2.5-1.5-4 0-3 3-5 6.5-5s6.5 2 6.5 5c0 1.5-.5 3-1.5 4l2 1c1-1 2-3 2-5 0-5-4-7-9-7z" fill="white"/></svg>`,
+    icon_svg: `<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#00ADD8"/><text x="12" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="12" fill="white">GO</text></svg>`,
     theme_color: "#00ADD8",
   },
   {
     id: "typescript",
     language_name: "TypeScript",
-    icon_svg: `<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#3178C6"/><path d="M3 3h18v18H3V3zm12 10v-2h4v-2h-4V7h-2v2h-2v2h2v2h2zm-6 2c0 .6-.4 1-1 1H6v2h2c1.7 0 3-1.3 3-3s-1.3-3-3-3H7v-2h2c.6 0 1-.4 1-1s-.4-1-1-1H6V6h2c1.7 0 3 1.3 3 3s-1.3 3-3 3H7v2h2c.6 0 1 .4 1 1z" fill="white"/></svg>`,
+    icon_svg: `<svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#3178C6"/><text x="12" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="12" fill="white">TS</text></svg>`,
     theme_color: "#3178C6",
   },
 ];
