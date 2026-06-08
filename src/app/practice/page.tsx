@@ -384,14 +384,14 @@ export default function PracticePage() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 20 }}
-                      className="mt-6 p-4 rounded-xl bg-accent/10 border border-accent/30"
+                      className="mt-6 p-3 md:p-4 rounded-xl bg-accent/10 border border-accent/30"
                     >
                       <div className="flex items-center gap-2">
-                        <Check className="w-5 h-5 text-accent" />
-                        <span className="font-bold text-accent">Mastered!</span>
-                        <span className="text-sm text-muted-foreground ml-auto">+20 Bonus XP</span>
+                        <Check className="w-4 md:w-5 h-4 md:h-5 text-accent" />
+                        <span className="font-bold text-sm md:text-base text-accent">Mastered!</span>
+                        <span className="text-xs md:text-sm text-muted-foreground ml-auto">+20 Bonus XP</span>
                       </div>
-                      <p className="text-sm text-muted-foreground mt-1">
+                      <p className="text-xs md:text-sm text-muted-foreground mt-1">
                         {currentExercise?.explanation}
                       </p>
                     </motion.div>
@@ -401,11 +401,11 @@ export default function PracticePage() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 20 }}
-                      className="mt-6 p-4 rounded-xl bg-destructive/10 border border-destructive/30"
+                      className="mt-6 p-3 md:p-4 rounded-xl bg-destructive/10 border border-destructive/30"
                     >
                       <div className="flex items-center gap-2">
-                        <RefreshCw className="w-5 h-5 text-destructive" />
-                        <span className="font-bold text-destructive">Keep trying</span>
+                        <RefreshCw className="w-4 md:w-5 h-4 md:h-5 text-destructive" />
+                        <span className="font-bold text-sm md:text-base text-destructive">Keep trying</span>
                       </div>
                     </motion.div>
                   )}
@@ -417,7 +417,7 @@ export default function PracticePage() {
                       whileTap={{ scale: 0.98 }}
                       onClick={doCheck}
                       disabled={!hasAnswer}
-                      className="btn-3d-primary w-full text-lg"
+                      className="btn-3d-primary w-full text-base md:text-lg"
                     >
                       Check Answer
                     </motion.button>
@@ -429,7 +429,7 @@ export default function PracticePage() {
                         setFeedback("none");
                         setSelectedAnswer("");
                       }}
-                      className="btn-3d-primary w-full text-lg"
+                      className="btn-3d-primary w-full text-base md:text-lg"
                     >
                       Try Again
                     </motion.button>
@@ -438,9 +438,10 @@ export default function PracticePage() {
                     <motion.button
                       whileTap={{ scale: 0.98 }}
                       onClick={doNext}
-                      className="btn-3d-primary w-full text-lg"
+                      className="btn-3d-primary w-full text-base md:text-lg"
                     >
-                      {currentIndex < exercises.length - 1 ? "Next Question" : "Done!"}
+                      <span className="md:hidden">{currentIndex < exercises.length - 1 ? "Next" : "Done"}</span>
+                      <span className="hidden md:inline">{currentIndex < exercises.length - 1 ? "Next Question" : "Done!"}</span>
                     </motion.button>
                   )}
                 </div>
