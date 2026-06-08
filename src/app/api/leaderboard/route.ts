@@ -20,7 +20,7 @@ export async function GET() {
     const rows = await sql`
       SELECT id, username, total_xp, league, streak_days
       FROM profiles
-      WHERE total_xp > 0
+      WHERE total_xp >= 0
       ORDER BY total_xp DESC
       LIMIT 50
     `;
