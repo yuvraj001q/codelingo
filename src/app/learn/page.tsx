@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Lock, Check, ChevronRight, BookOpen } from "lucide-react";
 import AuthGuard from "@/components/AuthGuard";
 import Navigation from "@/components/Navigation";
+import AIMascot from "@/components/ui/AIMascot";
 import { useStore } from "@/lib/store";
 import { sampleUnits } from "@/lib/utils";
 
@@ -94,11 +95,14 @@ export default function LearnPage() {
           animate={{ opacity: 1, y: 0 }}
           className="py-8"
         >
-          <div className="text-center mb-10">
-            <h1 className="text-3xl font-bold mb-2">
-              {activeCourse?.language_name || "Select a Course"}
-            </h1>
-            <p className="text-muted-foreground">Your learning pathway</p>
+          <div className="flex items-center gap-4 mb-8 justify-center">
+            <AIMascot size="sm" mood="happy" />
+            <div className="text-center">
+              <h1 className="text-3xl font-bold mb-1">
+                {activeCourse?.language_name || "Select a Course"}
+              </h1>
+              <p className="text-muted-foreground">Your learning pathway</p>
+            </div>
           </div>
 
           {!activeCourse && (

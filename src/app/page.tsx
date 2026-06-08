@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Code2, Sparkles, Infinity } from "lucide-react";
 import { useStore } from "@/lib/store";
 import ThemeToggle from "@/components/ThemeToggle";
+import Logo from "@/components/ui/Logo";
 
 export default function Home() {
   const { user } = useStore();
@@ -12,10 +13,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="flex justify-between items-center p-6">
-        <div className="flex items-center gap-2 text-2xl font-bold">
-          <Code2 className="w-8 h-8 text-primary" />
-          <span>OpenCodeLingo</span>
-        </div>
+        <Logo />
         <div className="flex items-center gap-4">
           <ThemeToggle />
           {user ? (

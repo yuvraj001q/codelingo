@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Check, RefreshCw, BookOpen, ChevronRight } from "lucide-react";
+import { X, Sparkles, Check, RefreshCw, ChevronRight } from "lucide-react";
+import AIMascot from "@/components/ui/AIMascot";
 import { useStore } from "@/lib/store";
 import { getLessonContent } from "@/lib/curriculum";
 import ProgressBar from "@/components/ui/ProgressBar";
@@ -187,11 +188,14 @@ export default function LessonPage() {
             animate={{ opacity: 1, x: 0 }}
             className="flex-1 flex flex-col py-6"
           >
-            <div className="mb-6">
-              <span className="text-xs font-medium uppercase tracking-wider text-accent mb-2 block">
-                Learning • Step {contentIndex + 1} of {contentItems.length}
-              </span>
-              <h2 className="text-2xl font-bold">{currentContent.title}</h2>
+            <div className="mb-4 flex items-start gap-3">
+              <AIMascot size="sm" mood="neutral" className="mt-1 shrink-0" />
+              <div>
+                <span className="text-xs font-medium uppercase tracking-wider text-accent mb-1 block">
+                  Learning • Step {contentIndex + 1} of {contentItems.length}
+                </span>
+                <h2 className="text-2xl font-bold">{currentContent.title}</h2>
+              </div>
             </div>
 
             <div className="card-bouncy p-6 mb-6">
@@ -236,26 +240,26 @@ export default function LessonPage() {
         )}
 
         {/* CONTENT-LESS FALLBACK: show exercises directly */}
-        {phase === "learn" && contentItems.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex-1 flex flex-col items-center justify-center py-12"
-          >
-            <BookOpen className="w-16 h-16 text-muted-foreground/40 mb-4" />
-            <h2 className="text-xl font-bold mb-2">Ready to Practice?</h2>
-            <p className="text-muted-foreground mb-6 text-center">
-              Let&apos;s test what you know with a few questions.
-            </p>
-            <motion.button
-              whileTap={{ scale: 0.98 }}
-              onClick={startQuiz}
-              className="btn-3d-primary text-lg"
+          {phase === "learn" && contentItems.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex-1 flex flex-col items-center justify-center py-12"
             >
-              Start
-            </motion.button>
-          </motion.div>
-        )}
+              <AIMascot size="lg" mood="happy" className="mb-4" message="Ready to test your knowledge?" />
+              <h2 className="text-xl font-bold mb-2">Ready to Practice?</h2>
+              <p className="text-muted-foreground mb-6 text-center">
+                Let&apos;s test what you know with a few questions.
+              </p>
+              <motion.button
+                whileTap={{ scale: 0.98 }}
+                onClick={startQuiz}
+                className="btn-3d-primary text-lg"
+              >
+                Start
+              </motion.button>
+            </motion.div>
+          )}
 
         {/* QUIZ PHASE */}
         {phase === "quiz" && currentExercise && (
@@ -437,7 +441,7 @@ export default function LessonPage() {
               transition={{ type: "spring", bounce: 0.5 }}
               className="text-center"
             >
-              <Sparkles className="w-20 h-20 text-accent mx-auto mb-4 animate-celebration" />
+              <AIMascot size="lg" mood="happy" className="mx-auto mb-4" message="You crushed it!" />
               <h2 className="text-3xl font-extrabold mb-2">Lesson Complete!</h2>
               <p className="text-muted-foreground">
                 Amazing work! Keep the streak going.
