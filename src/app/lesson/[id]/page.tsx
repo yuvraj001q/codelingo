@@ -453,24 +453,24 @@ export default function LessonPage() {
 
       {/* BOTTOM BAR */}
       {phase === "quiz" && (
-        <div className="sticky bottom-0 p-4 border-t bg-background">
+        <div className="sticky bottom-0 p-3 md:p-4 border-t bg-background">
           <AnimatePresence>
             {feedback === "correct" && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                className="mb-4 p-4 rounded-xl bg-accent/10 border border-accent/30 relative overflow-hidden"
+                className="mb-3 p-3 md:p-4 rounded-xl bg-accent/10 border border-accent/30 relative overflow-hidden"
               >
                 <div className="flex items-center gap-2 mb-1">
-                  <Check className="w-5 h-5 text-accent" />
-                  <span className="font-bold text-accent">Correct!</span>
+                  <Check className="w-4 md:w-5 h-4 md:h-5 text-accent" />
+                  <span className="font-bold text-sm md:text-base text-accent">Correct!</span>
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs md:text-sm text-muted-foreground">
                   {currentExercise?.explanation}
                 </p>
                 <div className="flex items-center gap-3 mt-1">
-                  <p className="text-sm font-medium text-accent">
+                  <p className="text-xs md:text-sm font-medium text-accent">
                     +{Math.round(((currentExercise?.difficulty || 1) * 10) * (1 + Math.min(streak - 1, 5) * 0.2))} XP
                     {streak > 1 && <span className="text-orange-500 ml-1">x{1 + Math.min(streak - 1, 5) * 0.2}</span>}
                   </p>
@@ -481,10 +481,10 @@ export default function LessonPage() {
                     initial={{ scale: 0.5, opacity: 0, y: 10 }}
                     animate={{ scale: 1.3, opacity: 1, y: -5 }}
                     exit={{ scale: 2, opacity: 0, y: -20 }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1"
+                    className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 flex items-center gap-1"
                   >
-                    <Flame className="w-6 h-6 text-orange-500" />
-                    <span className="text-lg font-extrabold text-orange-500">{streakPopup}</span>
+                    <Flame className="w-5 md:w-6 h-5 md:h-6 text-orange-500" />
+                    <span className="text-base md:text-lg font-extrabold text-orange-500">{streakPopup}</span>
                   </motion.div>
                 )}
               </motion.div>
@@ -494,23 +494,23 @@ export default function LessonPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                className="mb-4 p-4 rounded-xl bg-destructive/10 border border-destructive/30"
+                className="mb-3 p-3 md:p-4 rounded-xl bg-destructive/10 border border-destructive/30"
               >
-                <div className="flex items-center gap-2 mb-1">
-                  <RefreshCw className="w-5 h-5 text-destructive" />
-                  <span className="font-bold text-destructive">Not quite — try again</span>
+                <div className="flex items-center gap-2">
+                  <RefreshCw className="w-4 md:w-5 h-4 md:h-5 text-destructive" />
+                  <span className="font-bold text-sm md:text-base text-destructive">Not quite — try again</span>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          <div className="flex gap-3">
+          <div className="flex gap-2 md:gap-3">
             {feedback === "none" && (
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 onClick={doCheck}
                 disabled={!hasAnswer}
-                className="btn-3d-primary flex-1 text-lg"
+                className="btn-3d-primary flex-1 text-base md:text-lg"
               >
                 Check
               </motion.button>
@@ -519,7 +519,7 @@ export default function LessonPage() {
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 onClick={attemptAgain}
-                className="btn-3d-primary flex-1 text-lg"
+                className="btn-3d-primary flex-1 text-base md:text-lg"
               >
                 Try Again
               </motion.button>
@@ -528,9 +528,10 @@ export default function LessonPage() {
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 onClick={doNext}
-                className="btn-3d-primary flex-1 text-lg"
+                className="btn-3d-primary flex-1 text-base md:text-lg"
               >
-                {doneCount < exercises.length ? "Next Question" : "Finish Lesson"}
+                <span className="md:hidden">{doneCount < exercises.length ? "Next" : "Finish"}</span>
+                <span className="hidden md:inline">{doneCount < exercises.length ? "Next Question" : "Finish Lesson"}</span>
               </motion.button>
             )}
           </div>
