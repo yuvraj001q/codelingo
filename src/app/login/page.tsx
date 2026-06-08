@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Code2, Eye, EyeOff } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { useStore } from "@/lib/store";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,22 +15,29 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    const { error: authError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (authError) {
-      setError(authError.message);
+    const stored = localStorage.getItem("opencodeLingo_user");
+    if (!stored) {
+      setError("No account found. Please register first.");
       setLoading(false);
       return;
     }
 
+    const user = JSON.parse(stored);
+    const storedCredentials = localStorage.getItem("opencodeLingo_credentials");
+    const creds = storedCredentials ? JSON.parse(storedCredentials) : {};
+
+    if (creds.email !== email || creds.password !== password) {
+      setError("Invalid email or password.");
+      setLoading(false);
+      return;
+    }
+
+    useStore.getState().setUser(user);
     router.push("/learn");
   };
 

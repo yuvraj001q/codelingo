@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Code2, Eye, EyeOff } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { useStore } from "@/lib/store";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -16,40 +16,47 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleRegister = async (e: React.FormEvent) => {
+  const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (authError) {
-      setError(authError.message);
+    if (!email || !password || !username) {
+      setError("All fields are required.");
       setLoading(false);
       return;
     }
 
-    if (authData.user) {
-      const { error: profileError } = await supabase.from("profiles").insert([
-        {
-          id: authData.user.id,
-          username,
-          total_xp: 0,
-          streak_days: 0,
-          league: "Bronze",
-        },
-      ]);
-
-      if (profileError) {
-        setError(profileError.message);
-        setLoading(false);
-        return;
-      }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      setLoading(false);
+      return;
     }
 
+    const existing = localStorage.getItem("opencodeLingo_user");
+    if (existing) {
+      setError("An account already exists. Sign in instead.");
+      setLoading(false);
+      return;
+    }
+
+    const user = {
+      id: "local-user-" + Date.now(),
+      username,
+      total_xp: 0,
+      streak_days: 0,
+      league: "Bronze",
+      created_at: new Date().toISOString(),
+    };
+
+    localStorage.setItem("opencodeLingo_user", JSON.stringify(user));
+    localStorage.setItem(
+      "opencodeLingo_credentials",
+      JSON.stringify({ email, password })
+    );
+    localStorage.setItem("opencodeLingo_totalXp", "0");
+
+    useStore.getState().setUser(user);
     router.push("/learn");
   };
 

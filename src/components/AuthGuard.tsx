@@ -5,15 +5,17 @@ import { useRouter } from "next/navigation";
 import { useStore } from "@/lib/store";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { user, session } = useStore();
+  const { user } = useStore();
   const router = useRouter();
 
   useEffect(() => {
-    if (session === null) return;
-    if (!user) {
+    const stored = localStorage.getItem("opencodeLingo_user");
+    if (!user && !stored) {
       router.push("/login");
+    } else if (!user && stored) {
+      useStore.getState().setUser(JSON.parse(stored));
     }
-  }, [user, session, router]);
+  }, [user, router]);
 
   if (!user) {
     return (

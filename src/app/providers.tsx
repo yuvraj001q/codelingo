@@ -2,42 +2,17 @@
 
 import { ThemeProvider } from "next-themes";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { useStore } from "@/lib/store";
 
-function SupabaseProvider({ children }: { children: React.ReactNode }) {
-  const { setUser, setSession } = useStore();
+function LocalAuthProvider({ children }: { children: React.ReactNode }) {
+  const { setUser } = useStore();
 
   useEffect(() => {
-    const fetchProfile = async (userId: string) => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
-      if (data) setUser(data);
-    };
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session?.user) {
-        fetchProfile(session.user.id);
-      }
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (session?.user) {
-        fetchProfile(session.user.id);
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [setUser, setSession]);
+    const stored = localStorage.getItem("opencodeLingo_user");
+    if (stored) {
+      setUser(JSON.parse(stored));
+    }
+  }, [setUser]);
 
   return <>{children}</>;
 }
@@ -56,9 +31,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <SupabaseProvider>
+      <LocalAuthProvider>
         {mounted ? children : <div className="min-h-screen bg-background" />}
-      </SupabaseProvider>
+      </LocalAuthProvider>
     </ThemeProvider>
   );
 }
