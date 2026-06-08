@@ -22,9 +22,11 @@ interface JourneyLesson {
 
 const lessonTypes: string[] = ["challenge", "quiz", "challenge", "mastery", "challenge", "quiz", "challenge", "project", "challenge", "quiz", "challenge", "challenge"];
 
-function hashRange(index: number, min: number, max: number): number {
-  const x = Math.sin(index * 12.9898) * 43758.5453;
-  return min + (x - Math.floor(x)) * (max - min);
+function sCurveX(index: number, total: number): number {
+  const t = index / Math.max(total - 1, 1);
+  const amplitude = 30;
+  const offset = 50;
+  return offset + amplitude * Math.sin(t * Math.PI * 2);
 }
 
 export default function LearnPage() {
@@ -75,9 +77,8 @@ export default function LearnPage() {
 
   const positions = useMemo(() => {
     return nodes.map((_, i) => {
-      const x = hashRange(i * 3 + 1, 12, 82);
-      const yOffset = hashRange(i * 7 + 5, -15, 15);
-      const y = i * 120 + 60 + yOffset;
+      const x = sCurveX(i, nodes.length);
+      const y = i * 120 + 60;
       return { x, y };
     });
   }, [nodes]);
