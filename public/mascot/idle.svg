@@ -1,12 +1,85 @@
-<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="60" cy="60" r="55" fill="#4A90D9"/>
-  <ellipse cx="60" cy="72" rx="28" ry="18" fill="#3A7BC8"/>
-  <circle cx="42" cy="48" r="7" fill="white"/>
-  <circle cx="78" cy="48" r="7" fill="white"/>
-  <circle cx="44" cy="47" r="3.5" fill="#1a1a2e"/>
-  <circle cx="80" cy="47" r="3.5" fill="#1a1a2e"/>
-  <ellipse cx="60" cy="62" rx="10" ry="6" fill="#3A7BC8"/>
-  <path d="M50 82 Q60 90 70 82" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  <ellipse cx="28" cy="40" rx="12" ry="16" fill="#5BA0E6" transform="rotate(-15 28 40)"/>
-  <ellipse cx="92" cy="40" rx="12" ry="16" fill="#5BA0E6" transform="rotate(15 92 40)"/>
+<svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Antenna base on hood -->
+  <rect x="56" y="5" width="8" height="8" rx="2" fill="#4A90D9"/>
+  <circle cx="60" cy="4" r="5" fill="#FFD700"/>
+  <circle cx="58" cy="3" r="2" fill="white" opacity="0.6"/>
+
+  <!-- Hood (outer) -->
+  <path d="M40 45 Q40 18 60 16 Q80 18 80 45" fill="#E8F0FE"/>
+  <path d="M38 45 Q38 15 60 13 Q82 15 82 45 L82 95 L38 95 Z" fill="#F0F5FF"/>
+  <!-- Hood inner shadow -->
+  <path d="M40 45 Q40 20 60 18 Q80 20 80 45" fill="#D0E0F0" opacity="0.5"/>
+
+  <!-- Hoody body -->
+  <rect x="35" y="48" width="50" height="52" rx="10" fill="#F0F5FF"/>
+  <!-- Body outline -->
+  <rect x="35" y="48" width="50" height="52" rx="10" fill="none" stroke="#D0E0F0" stroke-width="1.5"/>
+  <!-- Hoody pocket -->
+  <path d="M42 80 L78 80" stroke="#D0E0F0" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+  <!-- Gold zipper -->
+  <line x1="60" y1="48" x2="60" y2="100" stroke="#FFD700" stroke-width="2"/>
+
+  <!-- Drawstrings -->
+  <path d="M45 46 Q42 55 44 60" stroke="#D0E0F0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <circle cx="44" cy="60" r="2" fill="#C0D0E0"/>
+  <path d="M75 46 Q78 55 76 60" stroke="#D0E0F0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <circle cx="76" cy="60" r="2" fill="#C0D0E0"/>
+
+  <!-- Robot head -->
+  <circle cx="60" cy="32" r="15" fill="#4A90D9"/>
+  <circle cx="60" cy="32" r="15" fill="none" stroke="#3A7BC8" stroke-width="1"/>
+  <!-- Head shine -->
+  <path d="M50 24 Q55 20 62 22" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+
+  <!-- Headphones band -->
+  <path d="M40 30 Q40 12 60 10 Q80 12 80 30" stroke="#2C2C3E" stroke-width="3" fill="none"/>
+  <!-- Headphone cups -->
+  <rect x="36" y="28" width="8" height="14" rx="4" fill="#2C2C3E"/>
+  <rect x="76" y="28" width="8" height="14" rx="4" fill="#2C2C3E"/>
+  <!-- Headphone glow -->
+  <rect x="38" y="30" width="4" height="10" rx="2" fill="#FF6B6B" opacity="0.5"/>
+  <rect x="78" y="30" width="4" height="10" rx="2" fill="#4ADE80" opacity="0.5"/>
+
+  <!-- Anime eyes --><!--
+  --><!-- Left eye -->
+  <ellipse cx="50" cy="30" rx="6" ry="7" fill="white"/>
+  <ellipse cx="50" cy="30" rx="4" ry="5" fill="#1a1a2e"/>
+  <circle cx="48" cy="28" r="2" fill="white"/>
+  <!-- Right eye -->
+  <ellipse cx="70" cy="30" rx="6" ry="7" fill="white"/>
+  <ellipse cx="70" cy="30" rx="4" ry="5" fill="#1a1a2e"/>
+  <circle cx="68" cy="28" r="2" fill="white"/>
+
+  <!-- Eyebrows -->
+  <path d="M43 22 Q50 19 55 22" stroke="#1a1a2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <path d="M65 22 Q70 19 77 22" stroke="#1a1a2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+
+  <!-- Mouth -->
+  <path d="M55 38 Q60 42 65 38" stroke="#1a1a2e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Arms -->
+  <!-- Left arm -->
+  <rect x="20" y="52" width="16" height="8" rx="4" fill="#4A90D9"/>
+  <!-- Left hand -->
+  <circle cx="20" cy="56" r="6" fill="#5BA0E6"/>
+  <circle cx="18" cy="54" r="2" fill="white" opacity="0.3"/>
+  <!-- Right arm -->
+  <rect x="84" y="52" width="16" height="8" rx="4" fill="#4A90D9"/>
+  <!-- Right hand -->
+  <circle cx="100" cy="56" r="6" fill="#5BA0E6"/>
+  <circle cx="98" cy="54" r="2" fill="white" opacity="0.3"/>
+
+  <!-- Legs -->
+  <!-- Left leg -->
+  <rect x="44" y="100" width="12" height="16" rx="4" fill="#4A90D9"/>
+  <!-- Left shoe -->
+  <rect x="42" y="112" width="16" height="8" rx="4" fill="#3A7BC8"/>
+  <!-- Right leg -->
+  <rect x="64" y="100" width="12" height="16" rx="4" fill="#4A90D9"/>
+  <!-- Right shoe -->
+  <rect x="62" y="112" width="16" height="8" rx="4" fill="#3A7BC8"/>
+
+  <!-- Ground shadow -->
+  <ellipse cx="60" cy="122" rx="30" ry="3" fill="rgba(0,0,0,0.08)"/>
 </svg>

@@ -11,7 +11,7 @@ interface CodeBuddyProps {
   message?: string;
 }
 
-const sizeMap = { sm: 48, md: 64, lg: 88 };
+const sizeMap = { sm: { w: 44, h: 48 }, md: { w: 60, h: 65 }, lg: { w: 82, h: 88 } };
 const stateLabels: Record<string, string> = {
   idle: "CodeBuddy",
   success: "Excited CodeBuddy",
@@ -29,11 +29,11 @@ const stateFiles: Record<string, string> = {
 };
 
 export default function CodeBuddy({ state, size = "md", className = "", message }: CodeBuddyProps) {
-  const px = sizeMap[size];
+  const dims = sizeMap[size];
   const [imgError, setImgError] = useState(false);
 
   const fallbackEmoji: Record<string, string> = {
-    idle: "🐘",
+    idle: "🤖",
     success: "🎉",
     error: "💪",
     thinking: "🤔",
@@ -58,7 +58,7 @@ export default function CodeBuddy({ state, size = "md", className = "", message 
             {imgError ? (
               <div
                 className="rounded-full bg-primary/10 flex items-center justify-center select-none"
-                style={{ width: px, height: px }}
+                style={{ width: dims.w, height: dims.h }}
               >
                 <span className="text-2xl">{fallbackEmoji[state]}</span>
               </div>
@@ -66,8 +66,8 @@ export default function CodeBuddy({ state, size = "md", className = "", message 
               <Image
                 src={stateFiles[state]}
                 alt={stateLabels[state]}
-                width={px}
-                height={px}
+                width={dims.w}
+                height={dims.h}
                 className="object-contain select-none pointer-events-none"
                 onError={() => setImgError(true)}
                 unoptimized

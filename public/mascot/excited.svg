@@ -1,14 +1,80 @@
-<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="60" cy="60" r="55" fill="#4A90D9"/>
-  <ellipse cx="60" cy="72" rx="28" ry="18" fill="#3A7BC8"/>
-  <circle cx="42" cy="48" r="7" fill="white"/>
-  <circle cx="78" cy="48" r="7" fill="white"/>
-  <circle cx="44" cy="47" r="3.5" fill="#1a1a2e"/>
-  <circle cx="80" cy="47" r="3.5" fill="#1a1a2e"/>
-  <path d="M58 56 L62 53 L66 56" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/>
-  <path d="M48 84 Q60 98 72 84" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  <path d="M52 12 L60 4 L68 12" stroke="#FFD700" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M70 8 L75 2 L80 8" stroke="#FFD700" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  <ellipse cx="28" cy="40" rx="12" ry="16" fill="#5BA0E6" transform="rotate(-15 28 40)"/>
-  <ellipse cx="92" cy="40" rx="12" ry="16" fill="#5BA0E6" transform="rotate(15 92 40)"/>
+<svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Antenna -->
+  <rect x="56" y="5" width="8" height="8" rx="2" fill="#4A90D9"/>
+  <circle cx="60" cy="4" r="5" fill="#FFD700"/>
+  <circle cx="58" cy="3" r="2" fill="white" opacity="0.6"/>
+
+  <!-- Sparkle stars -->
+  <path d="M85 8 L87 14 L93 16 L87 18 L85 24 L83 18 L77 16 L83 14 Z" fill="#FFD700" opacity="0.8"/>
+  <path d="M25 12 L26.5 16 L30.5 17.5 L26.5 19 L25 23 L23.5 19 L19.5 17.5 L23.5 16 Z" fill="#FFD700" opacity="0.8"/>
+  <path d="M100 24 L101 27 L104 28 L101 29 L100 32 L99 29 L96 28 L99 27 Z" fill="#FFD700" opacity="0.7"/>
+
+  <!-- Hood -->
+  <path d="M40 42 Q40 15 60 13 Q80 15 80 42 L82 95 L38 95 Z" fill="#F0F5FF"/>
+  <path d="M40 42 Q40 17 60 15 Q80 17 80 42" fill="#D0E0F0" opacity="0.5"/>
+
+  <!-- Hoody body (slightly raised for jumping) -->
+  <rect x="35" y="45" width="50" height="50" rx="10" fill="#F0F5FF"/>
+  <rect x="35" y="45" width="50" height="50" rx="10" fill="none" stroke="#D0E0F0" stroke-width="1.5"/>
+
+  <!-- Gold zipper -->
+  <line x1="60" y1="45" x2="60" y2="95" stroke="#FFD700" stroke-width="2"/>
+
+  <!-- Drawstrings -->
+  <path d="M45 43 Q42 52 44 57" stroke="#D0E0F0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <circle cx="44" cy="57" r="2" fill="#C0D0E0"/>
+  <path d="M75 43 Q78 52 76 57" stroke="#D0E0F0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <circle cx="76" cy="57" r="2" fill="#C0D0E0"/>
+
+  <!-- Robot head -->
+  <circle cx="60" cy="30" r="15" fill="#4A90D9"/>
+  <circle cx="60" cy="30" r="15" fill="none" stroke="#3A7BC8" stroke-width="1"/>
+  <path d="M50 22 Q55 18 62 20" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+
+  <!-- Headphones -->
+  <path d="M40 28 Q40 10 60 8 Q80 10 80 28" stroke="#2C2C3E" stroke-width="3" fill="none"/>
+  <rect x="36" y="26" width="8" height="14" rx="4" fill="#2C2C3E"/>
+  <rect x="76" y="26" width="8" height="14" rx="4" fill="#2C2C3E"/>
+  <rect x="38" y="28" width="4" height="10" rx="2" fill="#4ADE80" opacity="0.6"/>
+  <rect x="78" y="28" width="4" height="10" rx="2" fill="#4ADE80" opacity="0.6"/>
+
+  <!-- Anime eyes - big happy -->
+  <ellipse cx="50" cy="28" rx="7" ry="8" fill="white"/>
+  <ellipse cx="50" cy="28" rx="4.5" ry="6" fill="#1a1a2e"/>
+  <circle cx="48" cy="25" r="2.5" fill="white"/>
+  <circle cx="52" cy="30" r="1" fill="white" opacity="0.6"/>
+
+  <ellipse cx="70" cy="28" rx="7" ry="8" fill="white"/>
+  <ellipse cx="70" cy="28" rx="4.5" ry="6" fill="#1a1a2e"/>
+  <circle cx="68" cy="25" r="2.5" fill="white"/>
+  <circle cx="72" cy="30" r="1" fill="white" opacity="0.6"/>
+
+  <!-- Eyebrows - raised -->
+  <path d="M42 19 Q50 15 56 19" stroke="#1a1a2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <path d="M64 19 Q70 15 78 19" stroke="#1a1a2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+
+  <!-- Big smile -->
+  <path d="M52 35 Q60 44 68 35" stroke="#1a1a2e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- Blush -->
+  <ellipse cx="43" cy="35" rx="4" ry="2.5" fill="#FF8A80" opacity="0.4"/>
+  <ellipse cx="77" cy="35" rx="4" ry="2.5" fill="#FF8A80" opacity="0.4"/>
+
+  <!-- Arms up (excited) -->
+  <!-- Left arm raised -->
+  <rect x="18" y="35" width="16" height="8" rx="4" fill="#4A90D9" transform="rotate(-30 26 39)"/>
+  <circle cx="15" cy="34" r="6" fill="#5BA0E6"/>
+  <circle cx="13" cy="32" r="2" fill="white" opacity="0.3"/>
+  <!-- Right arm raised -->
+  <rect x="86" y="35" width="16" height="8" rx="4" fill="#4A90D9" transform="rotate(30 94 39)"/>
+  <circle cx="105" cy="34" r="6" fill="#5BA0E6"/>
+  <circle cx="103" cy="32" r="2" fill="white" opacity="0.3"/>
+
+  <!-- Legs (slightly apart for jumping) -->
+  <rect x="42" y="95" width="12" height="16" rx="4" fill="#4A90D9"/>
+  <rect x="40" y="107" width="16" height="8" rx="4" fill="#3A7BC8"/>
+  <rect x="66" y="95" width="12" height="16" rx="4" fill="#4A90D9"/>
+  <rect x="64" y="107" width="16" height="8" rx="4" fill="#3A7BC8"/>
+
+  <!-- Jump shadow (higher, smaller) -->
+  <ellipse cx="60" cy="120" rx="22" ry="3" fill="rgba(0,0,0,0.06)"/>
 </svg>

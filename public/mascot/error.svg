@@ -1,14 +1,78 @@
-<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="60" cy="60" r="55" fill="#4A90D9"/>
-  <ellipse cx="60" cy="72" rx="28" ry="18" fill="#3A7BC8"/>
-  <circle cx="42" cy="48" r="7" fill="white"/>
-  <circle cx="78" cy="48" r="7" fill="white"/>
-  <circle cx="44" cy="50" r="3" fill="#1a1a2e"/>
-  <circle cx="80" cy="50" r="3" fill="#1a1a2e"/>
-  <path d="M55 62 L65 62" stroke="#1a1a2e" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="M50 85 Q60 74 70 85" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/>
-  <path d="M15 18 Q20 8 28 14" stroke="#60B0FF" stroke-width="2" fill="none" stroke-linecap="round"/>
-  <circle cx="22" cy="11" r="3" fill="#60B0FF" opacity="0.6"/>
-  <ellipse cx="28" cy="40" rx="12" ry="16" fill="#5BA0E6" transform="rotate(-15 28 40)"/>
-  <ellipse cx="92" cy="40" rx="12" ry="16" fill="#5BA0E6" transform="rotate(15 92 40)"/>
+<svg viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Antenna -->
+  <rect x="56" y="5" width="8" height="8" rx="2" fill="#4A90D9"/>
+  <circle cx="60" cy="4" r="5" fill="#FFD700"/>
+  <circle cx="58" cy="3" r="2" fill="white" opacity="0.6"/>
+
+  <!-- Encouraging spark -->
+  <path d="M90 8 L91 11 L94 12 L91 13 L90 16 L89 13 L86 12 L89 11 Z" fill="#4ADE80" opacity="0.7"/>
+
+  <!-- Hood -->
+  <path d="M40 42 Q40 15 60 13 Q80 15 80 42 L82 95 L38 95 Z" fill="#F0F5FF"/>
+  <path d="M40 42 Q40 17 60 15 Q80 17 80 42" fill="#D0E0F0" opacity="0.5"/>
+
+  <!-- Hoody body -->
+  <rect x="35" y="48" width="50" height="52" rx="10" fill="#F0F5FF"/>
+  <rect x="35" y="48" width="50" height="52" rx="10" fill="none" stroke="#D0E0F0" stroke-width="1.5"/>
+
+  <!-- Gold zipper -->
+  <line x1="60" y1="48" x2="60" y2="100" stroke="#FFD700" stroke-width="2"/>
+
+  <!-- Drawstrings -->
+  <path d="M45 46 Q42 55 44 60" stroke="#D0E0F0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <circle cx="44" cy="60" r="2" fill="#C0D0E0"/>
+  <path d="M75 46 Q78 55 76 60" stroke="#D0E0F0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <circle cx="76" cy="60" r="2" fill="#C0D0E0"/>
+
+  <!-- Robot head -->
+  <circle cx="60" cy="30" r="15" fill="#4A90D9"/>
+  <circle cx="60" cy="30" r="15" fill="none" stroke="#3A7BC8" stroke-width="1"/>
+  <path d="M50 22 Q55 18 62 20" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+
+  <!-- Headphones -->
+  <path d="M40 28 Q40 10 60 8 Q80 10 80 28" stroke="#2C2C3E" stroke-width="3" fill="none"/>
+  <rect x="36" y="26" width="8" height="14" rx="4" fill="#2C2C3E"/>
+  <rect x="76" y="26" width="8" height="14" rx="4" fill="#2C2C3E"/>
+  <rect x="38" y="28" width="4" height="10" rx="2" fill="#FF6B6B" opacity="0.5"/>
+  <rect x="78" y="28" width="4" height="10" rx="2" fill="#4ADE80" opacity="0.5"/>
+
+  <!-- Anime eyes - determined/sad eyebrows -->
+  <!-- Left eye -->
+  <ellipse cx="50" cy="28" rx="6" ry="7" fill="white"/>
+  <ellipse cx="50" cy="28" rx="4" ry="5" fill="#1a1a2e"/>
+  <circle cx="48" cy="26" r="2" fill="white"/>
+  <!-- Right eye -->
+  <ellipse cx="70" cy="28" rx="6" ry="7" fill="white"/>
+  <ellipse cx="70" cy="28" rx="4" ry="5" fill="#1a1a2e"/>
+  <circle cx="68" cy="26" r="2" fill="white"/>
+
+  <!-- Eyebrows - angled up (determined/encouraging) -->
+  <path d="M42 21 Q48 17 54 20" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M66 20 Q72 17 78 21" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- Mouth - small determined smile -->
+  <path d="M55 37 Q60 40 65 37" stroke="#1a1a2e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Sweat drop -->
+  <path d="M82 18 Q84 14 82 11 Q80 14 82 18 Z" fill="#60B0FF" opacity="0.6"/>
+
+  <!-- Left arm at side -->
+  <rect x="20" y="52" width="16" height="8" rx="4" fill="#4A90D9"/>
+  <circle cx="20" cy="56" r="6" fill="#5BA0E6"/>
+  <circle cx="18" cy="54" r="2" fill="white" opacity="0.3"/>
+
+  <!-- Right arm giving thumbs up -->
+  <rect x="86" y="48" width="16" height="8" rx="4" fill="#4A90D9"/>
+  <circle cx="105" cy="48" r="6" fill="#5BA0E6"/>
+  <!-- Thumb -->
+  <rect x="105" y="42" width="5" height="8" rx="2.5" fill="#5BA0E6"/>
+
+  <!-- Legs -->
+  <rect x="44" y="100" width="12" height="16" rx="4" fill="#4A90D9"/>
+  <rect x="42" y="112" width="16" height="8" rx="4" fill="#3A7BC8"/>
+  <rect x="64" y="100" width="12" height="16" rx="4" fill="#4A90D9"/>
+  <rect x="62" y="112" width="16" height="8" rx="4" fill="#3A7BC8"/>
+
+  <!-- Ground shadow -->
+  <ellipse cx="60" cy="122" rx="30" ry="3" fill="rgba(0,0,0,0.08)"/>
 </svg>
