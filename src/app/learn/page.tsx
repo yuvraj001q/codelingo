@@ -77,7 +77,7 @@ export default function LearnPage() {
   const positions = useMemo(() => {
     return nodes.map((_, i) => {
       const x = sCurveX(i, nodes.length);
-      const y = i * 130 + 110;
+      const y = i * 150 + 130;
       return { x, y };
     });
   }, [nodes]);
@@ -183,7 +183,7 @@ export default function LearnPage() {
                 return (
                   <div key={node.id}>
                     {isNewUnit && (
-                      <div className="absolute z-20" style={{ left: "50%", top: pos.y - 65, transform: "translateX(-50%)" }}>
+                      <div className="absolute z-0" style={{ left: "50%", top: pos.y - 90, transform: "translateX(-50%)" }}>
                         <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-secondary border shadow-sm">
                           <Map className="w-4 h-4 text-primary" />
                           <span className="text-sm font-semibold">{node.unitTitle}</span>
