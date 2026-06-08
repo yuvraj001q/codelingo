@@ -296,8 +296,8 @@ export default function LessonPage() {
                     <motion.button
                       whileTap={{ scale: 0.98 }}
                       onClick={() => {
+                        setFeedback("correct");
                         setSelectedAnswer("understood");
-                        setTimeout(() => handleCheck(), 50);
                       }}
                       className="btn-3d-primary mt-6 px-8"
                     >
