@@ -11,7 +11,7 @@ import ProgressBar from "@/components/ui/ProgressBar";
 import CodeBlock from "@/components/ui/CodeBlock";
 import SyntaxDrag from "@/components/ui/SyntaxDrag";
 import type { ContentItem, Exercise } from "@/lib/types";
-import { updateStreak } from "@/lib/utils";
+import { updateStreak, getLeagueEmoji, getLeagueForXp } from "@/lib/utils";
 import { syncUserToNeon } from "@/lib/syncUser";
 
 type Phase = "learn" | "quiz" | "complete";
@@ -252,6 +252,15 @@ export default function LessonPage() {
             <span className="text-sm font-extrabold text-orange-500">{streak}</span>
           </motion.div>
         )}
+        {(() => {
+          const totalXp = parseInt(localStorage.getItem("opencodeLingo_totalXp") || "0", 10);
+          const league = getLeagueForXp(totalXp);
+          return (
+            <span className="text-sm" title={`${league} — ${totalXp} XP`}>
+              {getLeagueEmoji(league)}
+            </span>
+          );
+        })()}
         <span className="text-sm font-medium text-muted-foreground">
           {phase === "learn"
             ? `Learn ${contentIndex + 1}/${contentItems.length}`
