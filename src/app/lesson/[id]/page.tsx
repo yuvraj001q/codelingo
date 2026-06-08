@@ -25,7 +25,8 @@ export default function LessonPage() {
   const [contentItems, setContentItems] = useState<ContentItem[]>([]);
   const [contentIndex, setContentIndex] = useState(0);
   const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [queue, setQueue] = useState<number[]>([]);
+  const [currentPtr, setCurrentPtr] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [feedback, setFeedback] = useState<"none" | "correct" | "incorrect">("none");
   const [filledBlank, setFilledBlank] = useState("");
@@ -45,7 +46,9 @@ export default function LessonPage() {
 
     const stored = localStorage.getItem("opencodeLingo_currentExercises");
     if (stored) {
-      setExercises(JSON.parse(stored));
+      const parsed: Exercise[] = JSON.parse(stored);
+      setExercises(parsed);
+      setQueue(parsed.map((_, i) => i).sort(() => Math.random() - 0.5));
       return;
     }
 
@@ -55,21 +58,25 @@ export default function LessonPage() {
         "opencodeLingo_currentExercises",
         JSON.stringify(lessonContent.exercises)
       );
+      setQueue(lessonContent.exercises.map((_, i) => i).sort(() => Math.random() - 0.5));
     }
   }, [params.id]);
 
   useEffect(() => {
-    if (exercises.length > 0 && exercises[currentIndex]?.type === "syntax_drag") {
-      const options = exercises[currentIndex].options || [];
+    const idx = queue[currentPtr] ?? 0;
+    if (exercises.length > 0 && exercises[idx]?.type === "syntax_drag") {
+      const options = exercises[idx].options || [];
       setDragOrder([...options].sort(() => Math.random() - 0.5));
     }
-  }, [currentIndex, exercises]);
+  }, [queue, currentPtr, exercises]);
 
+  const currentIndex = queue[currentPtr] ?? 0;
   const currentExercise = exercises[currentIndex];
+  const doneCount = exercises.length - queue.length;
   const totalSteps = contentItems.length + exercises.length;
   const currentStep = contentItems.length > 0 && phase === "learn"
     ? contentIndex
-    : contentItems.length + currentIndex;
+    : contentItems.length + doneCount;
   const progress = totalSteps > 0 ? currentStep / totalSteps : 0;
 
   const doCheck = () => {
@@ -138,7 +145,16 @@ export default function LessonPage() {
     const totalXp = parseInt(localStorage.getItem("opencodeLingo_totalXp") || "0", 10);
     localStorage.setItem("opencodeLingo_totalXp", String(totalXp + xpGain));
 
-    if (currentIndex >= exercises.length - 1) {
+    // Remove current from queue (answered correctly)
+    const newQueue = queue.filter((_, i) => i !== currentPtr);
+    if (currentPtr >= newQueue.length && newQueue.length > 0) {
+      setCurrentPtr(0);
+    } else if (currentPtr >= newQueue.length) {
+      setCurrentPtr(0);
+    }
+    setQueue(newQueue);
+
+    if (newQueue.length === 0) {
       updateStreak();
       const completed = JSON.parse(localStorage.getItem("opencodeLingo_completedLessons") || "[]");
       if (!completed.includes(params.id)) {
@@ -154,7 +170,6 @@ export default function LessonPage() {
       return;
     }
 
-    setCurrentIndex((i) => i + 1);
     setSelectedAnswer("");
     setFilledBlank("");
     setDragOrder([]);
@@ -163,8 +178,18 @@ export default function LessonPage() {
   };
 
   const attemptAgain = () => {
+    // Move current question to end of queue
+    const current = queue[currentPtr];
+    const remaining = queue.filter((_, i) => i !== currentPtr);
+    const newQueue = [...remaining, current];
+    setQueue(newQueue);
+    setCurrentPtr(0);
     setFeedback("none");
     setSelectedAnswer("");
+    setFilledBlank("");
+    setDragOrder([]);
+    setAiHint("");
+    setStreak(0);
   };
 
   const handleQuit = () => {
@@ -230,7 +255,7 @@ export default function LessonPage() {
         <span className="text-sm font-medium text-muted-foreground">
           {phase === "learn"
             ? `Learn ${contentIndex + 1}/${contentItems.length}`
-            : `${currentIndex + 1}/${exercises.length}`}
+            : `Done ${doneCount}/${exercises.length}`}
         </span>
       </div>
 
@@ -328,7 +353,7 @@ export default function LessonPage() {
             >
               <div className="mb-6">
                 <span className="text-xs font-medium uppercase tracking-wider text-primary mb-2 block">
-                  Quiz • Question {currentIndex + 1} of {exercises.length}
+                  Quiz • {queue.length} remaining
                 </span>
                 <h2 className="text-xl font-bold">{currentExercise.question}</h2>
               </div>
@@ -505,7 +530,7 @@ export default function LessonPage() {
                 onClick={doNext}
                 className="btn-3d-primary flex-1 text-lg"
               >
-                {currentIndex < exercises.length - 1 ? "Next Question" : "Finish Lesson"}
+                {doneCount < exercises.length ? "Next Question" : "Finish Lesson"}
               </motion.button>
             )}
           </div>
