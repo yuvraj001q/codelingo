@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Flame, Code2, LogOut, Save, Eye, EyeOff } from "lucide-react";
+import { Flame, Code2, LogOut, Save, Eye, EyeOff, Upload } from "lucide-react";
 import AuthGuard from "@/components/AuthGuard";
 import Navigation from "@/components/Navigation";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -11,6 +11,7 @@ import { useStore } from "@/lib/store";
 import { formatXp, getLeagueEmoji, getLeagueProgress, getStreakData } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import ProgressBar from "@/components/ui/ProgressBar";
+import { syncUserToNeon } from "@/lib/syncUser";
 
 export default function ProfilePage() {
   const { user } = useStore();
@@ -27,6 +28,7 @@ export default function ProfilePage() {
   const [showPassword, setShowPassword] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+  const [syncing, setSyncing] = useState(false);
 
   const totalXp = parseInt(
     localStorage.getItem("opencodeLingo_totalXp") || "0", 10
@@ -76,6 +78,18 @@ export default function ProfilePage() {
     setNewPassword("");
     setSuccess("Changes saved!");
     setTimeout(() => setSuccess(""), 2500);
+  };
+
+  const handleSync = async () => {
+    setSyncing(true);
+    const ok = await syncUserToNeon();
+    if (ok) {
+      setSuccess("Synced to leaderboard!");
+    } else {
+      setError("Sync failed — is Neon connected?");
+    }
+    setSyncing(false);
+    setTimeout(() => { setSuccess(""); setError(""); }, 3000);
   };
 
   const handleSignOut = () => {
@@ -215,7 +229,16 @@ export default function ProfilePage() {
                 <span>Theme</span>
                 <ThemeToggle />
               </div>
-              <div className="border-t pt-4">
+              <div className="border-t pt-4 space-y-3">
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleSync}
+                  disabled={syncing}
+                  className="btn-3d w-full bg-primary/10 text-primary border-b-primary/20 rounded-2xl px-6 py-3 font-bold flex items-center justify-center gap-2"
+                >
+                  <Upload className={`w-5 h-5 ${syncing ? "animate-spin" : ""}`} />
+                  {syncing ? "Syncing..." : "Sync to Leaderboard"}
+                </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.98 }}
                   onClick={handleSignOut}

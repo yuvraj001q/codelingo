@@ -14,6 +14,19 @@ export async function POST(req: Request) {
     }
 
     const sql = neon(DATABASE_URL);
+
+    await sql`
+      CREATE TABLE IF NOT EXISTS profiles (
+        id TEXT PRIMARY KEY,
+        username TEXT NOT NULL,
+        email TEXT,
+        total_xp INTEGER DEFAULT 0,
+        streak_days INTEGER DEFAULT 0,
+        league TEXT DEFAULT 'Iron',
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `;
+
     await sql`
       INSERT INTO profiles (id, username, email, total_xp, streak_days, league, created_at)
       VALUES (${id}, ${username || "Coder"}, ${email || null}, ${total_xp || 0}, ${streak_days || 0}, ${league || "Iron"}, NOW())
@@ -27,7 +40,7 @@ export async function POST(req: Request) {
     `;
 
     return Response.json({ ok: true });
-  } catch {
-    return Response.json({ ok: false, reason: "Error" }, { status: 500 });
+  } catch (err) {
+    return Response.json({ ok: false, reason: String(err) }, { status: 500 });
   }
 }
