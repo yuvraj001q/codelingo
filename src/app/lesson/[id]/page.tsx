@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Check, RefreshCw, ChevronRight, Flame } from "lucide-react";
-import AIMascot from "@/components/ui/AIMascot";
 import CodeBuddy from "@/components/ui/CodeBuddy";
 import { useStore } from "@/lib/store";
 import { getLessonContent } from "@/lib/curriculum";
@@ -305,7 +304,7 @@ export default function LessonPage() {
             className="flex-1 flex flex-col py-6"
           >
             <div className="mb-4 flex items-start gap-3">
-              <AIMascot size="sm" mood="neutral" className="mt-1 shrink-0" />
+              <CodeBuddy size="sm" state="idle" className="mt-1 shrink-0" />
               <div>
                 <span className="text-xs font-medium uppercase tracking-wider text-accent mb-1 block">
                   Learning • Step {contentIndex + 1} of {contentItems.length}
@@ -362,7 +361,7 @@ export default function LessonPage() {
             animate={{ opacity: 1 }}
             className="flex-1 flex flex-col items-center justify-center py-12"
           >
-            <AIMascot size="lg" mood="happy" className="mb-4" message="Ready to test your knowledge?" />
+            <CodeBuddy size="lg" state="success" className="mb-4" message="Ready to test your knowledge?" />
             <h2 className="text-xl font-bold mb-2">Ready to Practice?</h2>
             <p className="text-muted-foreground mb-6 text-center">
               Let&apos;s test what you know with a few questions.
@@ -594,7 +593,7 @@ export default function LessonPage() {
               transition={{ type: "spring", bounce: 0.5 }}
               className="text-center"
             >
-              <AIMascot size="lg" mood="happy" className="mx-auto mb-4" message="You crushed it!" />
+              <CodeBuddy size="lg" state="success" className="mx-auto mb-4" message="You crushed it!" />
               <h2 className="text-3xl font-extrabold mb-2">Lesson Complete!</h2>
               <p className="text-muted-foreground">
                 Amazing work! Keep the streak going.

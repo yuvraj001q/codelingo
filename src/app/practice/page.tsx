@@ -19,7 +19,6 @@ import Navigation from "@/components/Navigation";
 import ProgressBar from "@/components/ui/ProgressBar";
 import CodeBlock from "@/components/ui/CodeBlock";
 import SyntaxDrag from "@/components/ui/SyntaxDrag";
-import AIMascot from "@/components/ui/AIMascot";
 import CodeBuddy from "@/components/ui/CodeBuddy";
 import { useStore } from "@/lib/store";
 import { curriculum } from "@/lib/curriculum";
@@ -336,7 +335,7 @@ export default function PracticePage() {
         </div>
       </div>
 
-      <AIMascot message={mascotMsg || "Ready to practice?"} mood="neutral" size="sm" className="mb-6" />
+      <CodeBuddy message={mascotMsg || "Ready to practice?"} state="idle" size="sm" className="mb-6" />
 
       {completedLessons.length === 0 ? (
         <div className="text-center py-16">
@@ -405,7 +404,7 @@ export default function PracticePage() {
         )}
       </div>
 
-      <AIMascot message={mascotMsg || "Let's fix those mistakes!"} mood="encouraging" size="sm" className="mb-6" />
+      <CodeBuddy message={mascotMsg || "Let's fix those mistakes!"} state="error" size="sm" className="mb-6" />
 
       {mistakes.length === 0 ? (
         <div className="text-center py-16">
@@ -472,7 +471,7 @@ export default function PracticePage() {
               Question {currentIndex + 1} of {exercises.length}
             </h2>
           </div>
-          <AIMascot message={mascotMsg} mood="neutral" size="sm" />
+          <CodeBuddy message={mascotMsg} state="idle" size="sm" />
         </div>
 
         <ProgressBar
@@ -657,7 +656,7 @@ export default function PracticePage() {
           You answered {aiCorrect} of {total} questions correctly
         </p>
 
-        <AIMascot message={mascotMsg} mood={pct >= 60 ? "happy" : "encouraging"} size="lg" className="mx-auto mb-6" />
+        <CodeBuddy message={mascotMsg} state={pct >= 60 ? "success" : "error"} size="lg" className="mx-auto mb-6" />
 
         <div className="card-bouncy p-6 mb-6 max-w-sm mx-auto text-left">
           <div className="flex items-center justify-between mb-3">
@@ -720,7 +719,7 @@ export default function PracticePage() {
   const renderLoading = () => (
     <div className="flex flex-col items-center justify-center py-20">
       <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-6" />
-      <AIMascot message="Generating questions just for you..." mood="neutral" size="sm" />
+      <CodeBuddy message="Generating questions just for you..." state="idle" size="sm" />
       <p className="text-sm text-muted-foreground mt-4">
         Creating personalized practice questions based on your progress...
       </p>

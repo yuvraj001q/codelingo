@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Check, ChevronRight } from "lucide-react";
 import AuthGuard from "@/components/AuthGuard";
 import Navigation from "@/components/Navigation";
-import AIMascot from "@/components/ui/AIMascot";
+import CodeBuddy from "@/components/ui/CodeBuddy";
 import { supabase } from "@/lib/supabase";
 import { useStore } from "@/lib/store";
 import { defaultCourses } from "@/lib/utils";
@@ -63,7 +63,7 @@ export default function CoursesPage() {
           className="py-8"
         >
           <div className="flex items-center gap-4 mb-6">
-            <AIMascot size="md" mood="happy" message="Pick a language and let's start coding!" />
+            <CodeBuddy size="md" state="success" message="Pick a language and let's start coding!" />
             <div>
               <h1 className="text-3xl font-bold mb-1">Omniverse Course Hub</h1>
               <p className="text-muted-foreground">

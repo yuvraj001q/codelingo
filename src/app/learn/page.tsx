@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { BookOpen, Flame, Zap, Trophy, Map } from "lucide-react";
 import AuthGuard from "@/components/AuthGuard";
 import Navigation from "@/components/Navigation";
-import AIMascot from "@/components/ui/AIMascot";
 import CodeBuddy from "@/components/ui/CodeBuddy";
 import HexNode from "@/components/ui/HexNode";
 import CourseCertificate from "@/components/ui/CourseCertificate";
@@ -151,7 +150,7 @@ export default function LearnPage() {
             </div>
 
             <div className="text-center mb-8">
-              <AIMascot size="md" mood="happy" message={`${completedCount} lessons down — keep going!`} className="mx-auto" />
+              <CodeBuddy size="md" state="success" message={`${completedCount} lessons down — keep going!`} className="mx-auto" />
             </div>
           </motion.div>
 
