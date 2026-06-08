@@ -14,38 +14,44 @@ export function formatXp(xp: number): string {
 
 export function getLeagueEmoji(league: string): string {
   const emojis: Record<string, string> = {
+    Iron: "⚙️",
     Bronze: "🥉",
     Silver: "🥈",
     Gold: "🥇",
-    Sapphire: "💎",
-    Ruby: "🔴",
-    Emerald: "🟢",
-    Amethyst: "🟣",
-    Obsidian: "⚫",
+    Platinum: "💠",
+    Emerald: "💚",
+    Diamond: "💎",
+    Master: "👑",
+    Grandmaster: "🏆",
+    Challenger: "🌟",
   };
   return emojis[league] || "🏅";
 }
 
 export const LEAGUES = [
+  "Iron",
   "Bronze",
   "Silver",
   "Gold",
-  "Sapphire",
-  "Ruby",
+  "Platinum",
   "Emerald",
-  "Amethyst",
-  "Obsidian",
+  "Diamond",
+  "Master",
+  "Grandmaster",
+  "Challenger",
 ];
 
 export const LEAGUE_XP_THRESHOLDS: Record<string, number> = {
-  Bronze: 0,
-  Silver: 1000,
+  Iron: 0,
+  Bronze: 500,
+  Silver: 1500,
   Gold: 3000,
-  Sapphire: 6000,
-  Ruby: 10000,
-  Emerald: 15000,
-  Amethyst: 22000,
-  Obsidian: 30000,
+  Platinum: 5500,
+  Emerald: 9000,
+  Diamond: 14000,
+  Master: 20000,
+  Grandmaster: 28000,
+  Challenger: 38000,
 };
 
 export function getLeagueForXp(xp: number): string {
