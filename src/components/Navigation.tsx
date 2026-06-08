@@ -41,7 +41,7 @@ export default function Navigation() {
               const Icon = item.icon;
               const isActive = pathname === item.href;
               return (
-                <Link key={item.href} href={item.href} className="relative">
+                <Link key={item.href} href={item.href} className="relative flex items-center justify-center h-full">
                   <motion.div
                     whileTap={{ scale: 0.9 }}
                     className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-colors ${
@@ -54,13 +54,13 @@ export default function Navigation() {
                     <span className="text-[10px] font-medium hidden md:block">
                       {item.label}
                     </span>
-                    {isActive && (
-                      <motion.div
-                        layoutId="nav-indicator"
-                        className="hidden md:block absolute -bottom-3 left-0 right-0 h-0.5 bg-primary rounded-full"
-                      />
-                    )}
                   </motion.div>
+                  {isActive && (
+                    <motion.div
+                      layoutId="nav-indicator"
+                      className="hidden md:block absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"
+                    />
+                  )}
                 </Link>
               );
             })}
