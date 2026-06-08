@@ -8,7 +8,6 @@ import AIMascot from "@/components/ui/AIMascot";
 import { useStore } from "@/lib/store";
 import { getLessonContent } from "@/lib/curriculum";
 import ProgressBar from "@/components/ui/ProgressBar";
-import FlashCard from "@/components/ui/FlashCard";
 import CodeBlock from "@/components/ui/CodeBlock";
 import SyntaxDrag from "@/components/ui/SyntaxDrag";
 import type { ContentItem, Exercise } from "@/lib/types";
@@ -75,6 +74,8 @@ export default function LessonPage() {
     let isCorrect = false;
     switch (currentExercise.type) {
       case "concept":
+        isCorrect = selectedAnswer === "understood";
+        break;
       case "multiple_choice":
         isCorrect = selectedAnswer === currentExercise.correct_answer;
         break;
@@ -288,14 +289,26 @@ export default function LessonPage() {
               )}
 
               {currentExercise.type === "concept" && (
-                <FlashCard
-                  question={currentExercise.question}
-                  explanation={currentExercise.explanation}
-                />
+                <div className="mt-4 card-bouncy p-6 text-center">
+                  <p className="text-base leading-relaxed mb-4">{currentExercise.question}</p>
+                  <p className="text-sm text-muted-foreground italic">{currentExercise.explanation}</p>
+                  {feedback === "none" && (
+                    <motion.button
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        setSelectedAnswer("understood");
+                        setTimeout(() => handleCheck(), 50);
+                      }}
+                      className="btn-3d-primary mt-6 px-8"
+                    >
+                      I Understand — Continue
+                    </motion.button>
+                  )}
+                </div>
               )}
 
-              {(currentExercise.type === "concept" || currentExercise.type === "multiple_choice") &&
-                currentExercise.options && (
+              {currentExercise.type === "multiple_choice" &&
+                currentExercise.options && currentExercise.options.length > 0 && (
                   <div className="space-y-3 mt-4">
                     {currentExercise.options.map((opt, i) => (
                       <motion.button
