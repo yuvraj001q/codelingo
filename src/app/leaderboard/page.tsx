@@ -22,13 +22,17 @@ export default function LeaderboardPage() {
   const { user } = useStore();
   const [entries, setEntries] = useState<LeaderboardUser[]>([]);
   const [loading, setLoading] = useState(true);
+  const [apiError, setApiError] = useState("");
   const totalXp = parseInt(localStorage.getItem("opencodeLingo_totalXp") || "0", 10);
   const userLeague = getLeagueForXp(totalXp);
 
   useEffect(() => {
     fetch("/api/leaderboard")
       .then((r) => r.json())
-      .then((data) => setEntries(data.users || []))
+      .then((data) => {
+        setEntries(data.users || []);
+        if (data.error) setApiError(data.error);
+      })
       .catch(() => setEntries([]))
       .finally(() => setLoading(false));
   }, []);
@@ -77,6 +81,9 @@ export default function LeaderboardPage() {
             <div className="text-center py-16 text-muted-foreground">
               <p className="text-lg font-medium">No leaderboard data yet</p>
               <p className="text-sm mt-1">Complete lessons to appear here</p>
+              {apiError && (
+                <p className="text-xs text-destructive mt-3 max-w-sm mx-auto">{apiError}</p>
+              )}
             </div>
           ) : (
             <div className="space-y-6">

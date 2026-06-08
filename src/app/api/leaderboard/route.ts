@@ -12,7 +12,7 @@ interface ProfileRow {
 
 export async function GET() {
   if (!DATABASE_URL) {
-    return Response.json({ users: [] });
+    return Response.json({ users: [], error: "Neon database not connected — set DATABASE_URL" });
   }
 
   try {
@@ -34,6 +34,6 @@ export async function GET() {
     }));
     return Response.json({ users });
   } catch {
-    return Response.json({ users: [] });
+    return Response.json({ users: [], error: "Database query failed — visit /admin/setup to initialize tables" });
   }
 }
