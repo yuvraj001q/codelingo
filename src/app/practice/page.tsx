@@ -11,7 +11,6 @@ import SyntaxDrag from "@/components/ui/SyntaxDrag";
 import AIMascot from "@/components/ui/AIMascot";
 import { useStore } from "@/lib/store";
 import { curriculum, getLessonContent } from "@/lib/curriculum";
-import { evaluateAnswer } from "@/lib/evaluateAnswer";
 import type { ContentItem, Exercise } from "@/lib/types";
 
 type Phase = "learn" | "quiz" | "done";
@@ -60,7 +59,6 @@ export default function PracticePage() {
   const [feedback, setFeedback] = useState<"none" | "correct" | "incorrect">("none");
   const [filledBlank, setFilledBlank] = useState("");
   const [dragOrder, setDragOrder] = useState<string[]>([]);
-  const [checking, setChecking] = useState(false);
   const [mascotMsg, setMascotMsg] = useState("");
 
   useEffect(() => {
@@ -112,48 +110,43 @@ export default function PracticePage() {
     : contentItems.length + currentIndex;
   const progress = totalSteps > 0 ? currentStep / totalSteps : 0;
 
-  const handleCheck = async () => {
-    if (!currentExercise || checking) return;
-    setChecking(true);
+  const doCheck = () => {
+    if (!currentExercise) return;
 
-    let isCorrect = false;
+    let correct = false;
 
-    switch (currentExercise.type) {
-      case "concept":
-        isCorrect = selectedAnswer === "understood";
-        break;
-      case "multiple_choice":
-        isCorrect = selectedAnswer === currentExercise.correct_answer;
-        break;
-      case "fill_blank": {
-        const result = await evaluateAnswer(
-          currentExercise.question,
-          currentExercise.correct_answer,
-          filledBlank,
-          "fill_blank"
-        );
-        isCorrect = result.isCorrect;
-        if (!isCorrect && result.explanation) {
-          const el = document.getElementById("practice-ai-explanation");
-          if (el) el.textContent = result.explanation;
-        }
-        break;
+    if (currentExercise.type === "concept") {
+      correct = selectedAnswer === "understood";
+    } else if (currentExercise.type === "multiple_choice") {
+      correct = selectedAnswer === currentExercise.correct_answer;
+    } else if (currentExercise.type === "fill_blank") {
+      const trimmed = filledBlank.trim().toLowerCase();
+      const expected = currentExercise.correct_answer.trim().toLowerCase();
+      correct = trimmed === expected;
+      if (!correct) {
+        fetch("/api/evaluate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            question: currentExercise.question,
+            correctAnswer: currentExercise.correct_answer,
+            userAnswer: filledBlank,
+            type: "fill_blank",
+          }),
+        })
+          .then((r) => r.json())
+          .then((res) => {
+            if (!res.isCorrect) {
+              setMascotMsg(res.explanation || `Expected something like "${currentExercise.correct_answer}"`);
+            }
+          })
+          .catch(() => {});
       }
-      case "syntax_drag": {
-        const result = await evaluateAnswer(
-          currentExercise.question,
-          currentExercise.correct_answer,
-          dragOrder.join("\n"),
-          "syntax_drag"
-        );
-        isCorrect = result.isCorrect;
-        break;
-      }
+    } else if (currentExercise.type === "syntax_drag") {
+      correct = dragOrder.join("\n").trim() === currentExercise.correct_answer.trim();
     }
 
-    setChecking(false);
-
-    if (isCorrect) {
+    if (correct) {
       setFeedback("correct");
       addXp(20);
       setMascotMsg(randomMsg("correct"));
@@ -163,7 +156,7 @@ export default function PracticePage() {
     }
   };
 
-  const handleNext = () => {
+  const doNext = () => {
     if (feedback !== "correct") return;
 
     if (currentIndex < exercises.length - 1) {
@@ -205,6 +198,8 @@ export default function PracticePage() {
       setMascotMsg(randomMsg("quiz"));
     }
   };
+
+  const hasAnswer = selectedAnswer || filledBlank || dragOrder.length > 0;
 
   if (phase === "done") {
     return (
@@ -322,7 +317,6 @@ export default function PracticePage() {
                         whileTap={{ scale: 0.98 }}
                         onClick={() => {
                           setFeedback("correct");
-                          addXp(20);
                           setSelectedAnswer("understood");
                         }}
                         className="btn-3d-primary mt-6 px-8"
@@ -413,7 +407,6 @@ export default function PracticePage() {
                         <RefreshCw className="w-5 h-5 text-destructive" />
                         <span className="font-bold text-destructive">Keep trying</span>
                       </div>
-                      <p id="practice-ai-explanation" className="text-sm text-muted-foreground mt-1 italic"></p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -422,15 +415,11 @@ export default function PracticePage() {
                   {feedback === "none" && (
                     <motion.button
                       whileTap={{ scale: 0.98 }}
-                      onClick={handleCheck}
-                      disabled={(!selectedAnswer && !filledBlank && dragOrder.length === 0) || checking}
-                      className="btn-3d-primary w-full text-lg flex items-center justify-center gap-2"
+                      onClick={doCheck}
+                      disabled={!hasAnswer}
+                      className="btn-3d-primary w-full text-lg"
                     >
-                      {checking ? (
-                        <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Checking...</>
-                      ) : (
-                        "Check Answer"
-                      )}
+                      Check Answer
                     </motion.button>
                   )}
                   {feedback === "incorrect" && (
@@ -448,7 +437,7 @@ export default function PracticePage() {
                   {feedback === "correct" && (
                     <motion.button
                       whileTap={{ scale: 0.98 }}
-                      onClick={handleNext}
+                      onClick={doNext}
                       className="btn-3d-primary w-full text-lg"
                     >
                       {currentIndex < exercises.length - 1 ? "Next Question" : "Done!"}

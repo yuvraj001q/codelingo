@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { evaluateAnswer } from "@/lib/evaluateAnswer";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Check, RefreshCw, ChevronRight } from "lucide-react";
@@ -31,7 +30,7 @@ export default function LessonPage() {
   const [filledBlank, setFilledBlank] = useState("");
   const [dragOrder, setDragOrder] = useState<string[]>([]);
   const [showCelebration, setShowCelebration] = useState(false);
-  const [checking, setChecking] = useState(false);
+  const [aiHint, setAiHint] = useState("");
 
   useEffect(() => {
     const courseId = (params.id as string).split("-u")[0];
@@ -70,88 +69,92 @@ export default function LessonPage() {
     : contentItems.length + currentIndex;
   const progress = totalSteps > 0 ? currentStep / totalSteps : 0;
 
-  const handleCheck = useCallback(async () => {
-    if (!currentExercise || checking) return;
-    setChecking(true);
+  const doCheck = () => {
+    if (!currentExercise) return;
 
-    let isCorrect = false;
-    let explanation = "";
+    let correct = false;
 
-    switch (currentExercise.type) {
-      case "concept":
-        isCorrect = selectedAnswer === "understood";
-        break;
-      case "multiple_choice":
-        isCorrect = selectedAnswer === currentExercise.correct_answer;
-        break;
-      case "fill_blank": {
-        const result = await evaluateAnswer(
-          currentExercise.question,
-          currentExercise.correct_answer,
-          filledBlank,
-          "fill_blank"
-        );
-        isCorrect = result.isCorrect;
-        explanation = result.explanation;
-        break;
+    if (currentExercise.type === "concept") {
+      correct = selectedAnswer === "understood";
+    } else if (currentExercise.type === "multiple_choice") {
+      correct = selectedAnswer === currentExercise.correct_answer;
+    } else if (currentExercise.type === "fill_blank") {
+      const trimmed = filledBlank.trim().toLowerCase();
+      const expected = currentExercise.correct_answer.trim().toLowerCase();
+      correct = trimmed === expected;
+      if (!correct) {
+        setAiHint(`Hint: Think about "${currentExercise.correct_answer}"`);
       }
-      case "syntax_drag": {
-        const result = await evaluateAnswer(
-          currentExercise.question,
-          currentExercise.correct_answer,
-          dragOrder.join("\n"),
-          "syntax_drag"
-        );
-        isCorrect = result.isCorrect;
-        explanation = result.explanation;
-        break;
-      }
+    } else if (currentExercise.type === "syntax_drag") {
+      correct = dragOrder.join("\n").trim() === currentExercise.correct_answer.trim();
     }
 
-    setChecking(false);
-
-    if (isCorrect) {
+    if (correct) {
       setFeedback("correct");
       playSound(true);
+      setAiHint("");
+      // Fire AI for semantic check (non-blocking, enhances UX)
+      if (currentExercise.type === "fill_blank") {
+        fetch("/api/evaluate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            question: currentExercise.question,
+            correctAnswer: currentExercise.correct_answer,
+            userAnswer: filledBlank,
+            type: "fill_blank",
+          }),
+        })
+          .then((r) => r.json())
+          .then((res) => {
+            if (!res.isCorrect) {
+              setAiHint(res.explanation || `Expected something like "${currentExercise.correct_answer}"`);
+            }
+          })
+          .catch(() => {});
+      }
     } else {
       setFeedback("incorrect");
       playSound(false);
-      if (explanation) {
-        const el = document.getElementById("ai-explanation");
-        if (el) el.textContent = explanation;
-      }
     }
-  }, [currentExercise, selectedAnswer, filledBlank, dragOrder, checking]);
+  };
 
-  const handleNext = useCallback(() => {
-    if (feedback === "correct") {
-      const xpGain = (currentExercise?.difficulty || 1) * 10;
-      addXp(xpGain);
+  const doNext = () => {
+    if (feedback !== "correct") return;
 
-      const totalXp = parseInt(localStorage.getItem("opencodeLingo_totalXp") || "0", 10);
-      localStorage.setItem("opencodeLingo_totalXp", String(totalXp + xpGain));
+    const xpGain = (currentExercise?.difficulty || 1) * 10;
+    addXp(xpGain);
 
-      if (currentIndex >= exercises.length - 1) {
-        updateStreak();
-        const completed = JSON.parse(localStorage.getItem("opencodeLingo_completedLessons") || "[]");
-        if (!completed.includes(params.id)) {
-          completed.push(params.id);
-          localStorage.setItem("opencodeLingo_completedLessons", JSON.stringify(completed));
-        }
-        setShowCelebration(true);
-        setTimeout(() => {
-          localStorage.removeItem("opencodeLingo_currentExercises");
-          router.push("/learn");
-        }, 3000);
-        return;
+    const totalXp = parseInt(localStorage.getItem("opencodeLingo_totalXp") || "0", 10);
+    localStorage.setItem("opencodeLingo_totalXp", String(totalXp + xpGain));
+
+    if (currentIndex >= exercises.length - 1) {
+      updateStreak();
+      const completed = JSON.parse(localStorage.getItem("opencodeLingo_completedLessons") || "[]");
+      if (!completed.includes(params.id)) {
+        completed.push(params.id);
+        localStorage.setItem("opencodeLingo_completedLessons", JSON.stringify(completed));
       }
-
-      setCurrentIndex((i) => i + 1);
-      setSelectedAnswer("");
-      setFilledBlank("");
-      setFeedback("none");
+      setShowCelebration(true);
+      setTimeout(() => {
+        localStorage.removeItem("opencodeLingo_currentExercises");
+        router.push("/learn");
+      }, 3000);
+      return;
     }
-  }, [feedback, currentIndex, exercises.length, currentExercise, addXp, router, params.id]);
+
+    setCurrentIndex((i) => i + 1);
+    setSelectedAnswer("");
+    setFilledBlank("");
+    setDragOrder([]);
+    setFeedback("none");
+    setAiHint("");
+  };
+
+  const attemptAgain = () => {
+    setFeedback("none");
+    setSelectedAnswer("");
+  };
 
   const handleQuit = () => {
     localStorage.removeItem("opencodeLingo_currentExercises");
@@ -178,6 +181,8 @@ export default function LessonPage() {
 
   const currentContent = contentItems[contentIndex];
   const isLastContent = contentIndex >= contentItems.length - 1;
+
+  const hasAnswer = selectedAnswer || filledBlank || dragOrder.length > 0;
 
   if (exercises.length === 0 && contentItems.length === 0) {
     return (
@@ -267,27 +272,27 @@ export default function LessonPage() {
           </motion.div>
         )}
 
-        {/* CONTENT-LESS FALLBACK: show exercises directly */}
-          {phase === "learn" && contentItems.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex-1 flex flex-col items-center justify-center py-12"
+        {/* CONTENT-LESS FALLBACK */}
+        {phase === "learn" && contentItems.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex-1 flex flex-col items-center justify-center py-12"
+          >
+            <AIMascot size="lg" mood="happy" className="mb-4" message="Ready to test your knowledge?" />
+            <h2 className="text-xl font-bold mb-2">Ready to Practice?</h2>
+            <p className="text-muted-foreground mb-6 text-center">
+              Let&apos;s test what you know with a few questions.
+            </p>
+            <motion.button
+              whileTap={{ scale: 0.98 }}
+              onClick={startQuiz}
+              className="btn-3d-primary text-lg"
             >
-              <AIMascot size="lg" mood="happy" className="mb-4" message="Ready to test your knowledge?" />
-              <h2 className="text-xl font-bold mb-2">Ready to Practice?</h2>
-              <p className="text-muted-foreground mb-6 text-center">
-                Let&apos;s test what you know with a few questions.
-              </p>
-              <motion.button
-                whileTap={{ scale: 0.98 }}
-                onClick={startQuiz}
-                className="btn-3d-primary text-lg"
-              >
-                Start
-              </motion.button>
-            </motion.div>
-          )}
+              Start
+            </motion.button>
+          </motion.div>
+        )}
 
         {/* QUIZ PHASE */}
         {phase === "quiz" && currentExercise && (
@@ -384,6 +389,16 @@ export default function LessonPage() {
                   />
                 </div>
               )}
+
+              {aiHint && feedback === "incorrect" && (
+                <motion.p
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-sm text-muted-foreground mt-4 italic text-center"
+                >
+                  {aiHint}
+                </motion.p>
+              )}
             </motion.div>
           </AnimatePresence>
         )}
@@ -423,10 +438,6 @@ export default function LessonPage() {
                   <RefreshCw className="w-5 h-5 text-destructive" />
                   <span className="font-bold text-destructive">Not quite — try again</span>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  No worries, keep trying. You&apos;ve got this!
-                </p>
-                <p id="ai-explanation" className="text-sm text-muted-foreground mt-1 italic"></p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -435,24 +446,17 @@ export default function LessonPage() {
             {feedback === "none" && (
               <motion.button
                 whileTap={{ scale: 0.98 }}
-                onClick={handleCheck}
-                disabled={(!selectedAnswer && !filledBlank && dragOrder.length === 0) || checking}
-                className="btn-3d-primary flex-1 text-lg flex items-center justify-center gap-2"
+                onClick={doCheck}
+                disabled={!hasAnswer}
+                className="btn-3d-primary flex-1 text-lg"
               >
-                {checking ? (
-                  <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Checking...</>
-                ) : (
-                  "Check"
-                )}
+                Check
               </motion.button>
             )}
             {feedback === "incorrect" && (
               <motion.button
                 whileTap={{ scale: 0.98 }}
-                onClick={() => {
-                  setFeedback("none");
-                  setSelectedAnswer("");
-                }}
+                onClick={attemptAgain}
                 className="btn-3d-primary flex-1 text-lg"
               >
                 Try Again
@@ -461,7 +465,7 @@ export default function LessonPage() {
             {feedback === "correct" && (
               <motion.button
                 whileTap={{ scale: 0.98 }}
-                onClick={handleNext}
+                onClick={doNext}
                 className="btn-3d-primary flex-1 text-lg"
               >
                 {currentIndex < exercises.length - 1 ? "Next Question" : "Finish Lesson"}
