@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 160 84% 39%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 222 47% 4%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 4%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 160 84% 39%;
+    --accent-foreground: 222 47% 4%;
+    --destructive: 0 63% 41%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 224 76% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  .btn-3d {
+    @apply relative border-b-4 active:border-b-0 active:translate-y-1 transition-all duration-150;
+  }
+  .btn-3d-primary {
+    @apply btn-3d bg-primary text-primary-foreground border-b-blue-700 hover:brightness-110 active:brightness-90 rounded-2xl px-6 py-3 font-bold;
+  }
+  .btn-3d-secondary {
+    @apply btn-3d bg-secondary text-secondary-foreground border-b-gray-300 dark:border-b-gray-600 hover:brightness-95 active:brightness-90 rounded-2xl px-6 py-3 font-bold;
+  }
+  .card-bouncy {
+    @apply rounded-2xl border bg-card text-card-foreground shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1;
+  }
+  .node-circle {
+    @apply w-14 h-14 rounded-full flex items-center justify-center border-4 transition-all duration-300;
+  }
+  .node-locked {
+    @apply node-circle border-muted-foreground/30 bg-muted text-muted-foreground;
+  }
+  .node-active {
+    @apply node-circle border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/40 animate-pulse;
+  }
+  .node-completed {
+    @apply node-circle border-accent bg-accent text-accent-foreground shadow-md shadow-accent/30;
+  }
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+@keyframes celebration {
+  0% { transform: scale(0) rotate(0deg); opacity: 0; }
+  50% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.animate-celebration {
+  animation: celebration 0.5s ease-out;
+}
