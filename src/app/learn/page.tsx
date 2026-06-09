@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { BookOpen, Flame, Zap, Trophy, Map } from "lucide-react";
 import AuthGuard from "@/components/AuthGuard";
 import Navigation from "@/components/Navigation";
-import CodeBuddy from "@/components/ui/CodeBuddy";
+import CodeBuddyVisor from "@/components/ui/CodeBuddyVisor";
 import HexNode from "@/components/ui/HexNode";
 import CourseCertificate from "@/components/ui/CourseCertificate";
 import { useStore } from "@/lib/store";
@@ -150,7 +150,10 @@ export default function LearnPage() {
             </div>
 
             <div className="text-center mb-8">
-              <CodeBuddy size="md" state="success" message={`${completedCount} lessons down — keep going!`} className="mx-auto" />
+              <div className="flex flex-col items-center gap-2 mx-auto">
+  <CodeBuddyVisor size="md" state="success" />
+  <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-4 py-2.5 rounded-2xl bg-secondary text-sm font-medium text-foreground text-center shadow-sm max-w-[220px]">{completedCount} lessons down — keep going!</motion.div>
+</div>
             </div>
           </motion.div>
 
@@ -227,7 +230,7 @@ export default function LearnPage() {
                     <Trophy className="w-5 h-5" />
                     <span className="font-bold">Finish Line</span>
                   </div>
-                  <CodeBuddy state="idle" size="lg" className="mt-6" />
+                  <CodeBuddyVisor state="idle" size="lg" className="mt-6" />
                 </div>
               )}
             </div>

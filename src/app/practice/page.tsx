@@ -19,7 +19,7 @@ import Navigation from "@/components/Navigation";
 import ProgressBar from "@/components/ui/ProgressBar";
 import CodeBlock from "@/components/ui/CodeBlock";
 import SyntaxDrag from "@/components/ui/SyntaxDrag";
-import CodeBuddy from "@/components/ui/CodeBuddy";
+import CodeBuddyVisor from "@/components/ui/CodeBuddyVisor";
 import { useStore } from "@/lib/store";
 import { curriculum } from "@/lib/curriculum";
 import type { Exercise } from "@/lib/types";
@@ -335,7 +335,10 @@ export default function PracticePage() {
         </div>
       </div>
 
-      <CodeBuddy message={mascotMsg || "Ready to practice?"} state="idle" size="sm" className="mb-6" />
+      <div className="flex flex-col items-center gap-2 mb-6">
+        <CodeBuddyVisor state="idle" size="sm" />
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-4 py-2.5 rounded-2xl bg-secondary text-sm font-medium text-foreground text-center shadow-sm max-w-[220px]">{mascotMsg || "Ready to practice?"}</motion.div>
+      </div>
 
       {completedLessons.length === 0 ? (
         <div className="text-center py-16">
@@ -404,11 +407,17 @@ export default function PracticePage() {
         )}
       </div>
 
-      <CodeBuddy message={mascotMsg || "Let's fix those mistakes!"} state="error" size="sm" className="mb-6" />
+      <div className="flex flex-col items-center gap-2 mb-6">
+        <CodeBuddyVisor state="error" size="sm" />
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-4 py-2.5 rounded-2xl bg-secondary text-sm font-medium text-foreground text-center shadow-sm max-w-[220px]">{mascotMsg || "Let's fix those mistakes!"}</motion.div>
+      </div>
 
       {mistakes.length === 0 ? (
         <div className="text-center py-16">
-          <CodeBuddy state="coding" size="lg" className="mx-auto mb-4" message="No bugs found! You're writing clean code." />
+          <div className="flex flex-col items-center gap-2 mx-auto mb-4">
+            <CodeBuddyVisor state="coding" size="lg" />
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-4 py-2.5 rounded-2xl bg-secondary text-sm font-medium text-foreground text-center shadow-sm max-w-[220px]">No bugs found! You&apos;re writing clean code.</motion.div>
+          </div>
           <h2 className="text-xl font-bold mb-2">No Mistakes!</h2>
           <p className="text-muted-foreground">
             You&apos;re doing great — all mistakes have been corrected!
@@ -471,7 +480,10 @@ export default function PracticePage() {
               Question {currentIndex + 1} of {exercises.length}
             </h2>
           </div>
-          <CodeBuddy message={mascotMsg} state="idle" size="sm" />
+          <div className="flex flex-col items-center gap-2">
+            <CodeBuddyVisor state="idle" size="sm" />
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-4 py-2.5 rounded-2xl bg-secondary text-sm font-medium text-foreground text-center shadow-sm max-w-[220px]">{mascotMsg}</motion.div>
+          </div>
         </div>
 
         <ProgressBar
@@ -656,7 +668,10 @@ export default function PracticePage() {
           You answered {aiCorrect} of {total} questions correctly
         </p>
 
-        <CodeBuddy message={mascotMsg} state={pct >= 60 ? "success" : "error"} size="lg" className="mx-auto mb-6" />
+        <div className="flex flex-col items-center gap-2 mx-auto mb-6">
+          <CodeBuddyVisor state={pct >= 60 ? "success" : "error"} size="lg" />
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-4 py-2.5 rounded-2xl bg-secondary text-sm font-medium text-foreground text-center shadow-sm max-w-[220px]">{mascotMsg}</motion.div>
+        </div>
 
         <div className="card-bouncy p-6 mb-6 max-w-sm mx-auto text-left">
           <div className="flex items-center justify-between mb-3">
@@ -719,7 +734,10 @@ export default function PracticePage() {
   const renderLoading = () => (
     <div className="flex flex-col items-center justify-center py-20">
       <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-6" />
-      <CodeBuddy message="Generating questions just for you..." state="idle" size="sm" />
+      <div className="flex flex-col items-center gap-2">
+        <CodeBuddyVisor state="idle" size="sm" />
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-4 py-2.5 rounded-2xl bg-secondary text-sm font-medium text-foreground text-center shadow-sm max-w-[220px]">Generating questions just for you...</motion.div>
+      </div>
       <p className="text-sm text-muted-foreground mt-4">
         Creating personalized practice questions based on your progress...
       </p>

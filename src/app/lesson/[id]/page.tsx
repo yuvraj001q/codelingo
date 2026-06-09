@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Check, RefreshCw, ChevronRight, Flame } from "lucide-react";
-import CodeBuddy from "@/components/ui/CodeBuddy";
+import CodeBuddyVisor from "@/components/ui/CodeBuddyVisor";
 import { useStore } from "@/lib/store";
 import { getLessonContent } from "@/lib/curriculum";
 import ProgressBar from "@/components/ui/ProgressBar";
@@ -304,7 +304,7 @@ export default function LessonPage() {
             className="flex-1 flex flex-col py-6"
           >
             <div className="mb-4 flex items-start gap-3">
-              <CodeBuddy size="sm" state="idle" className="mt-1 shrink-0" />
+              <CodeBuddyVisor size="sm" state="idle" className="mt-1 shrink-0" />
               <div>
                 <span className="text-xs font-medium uppercase tracking-wider text-accent mb-1 block">
                   Learning • Step {contentIndex + 1} of {contentItems.length}
@@ -361,7 +361,10 @@ export default function LessonPage() {
             animate={{ opacity: 1 }}
             className="flex-1 flex flex-col items-center justify-center py-12"
           >
-            <CodeBuddy size="lg" state="success" className="mb-4" message="Ready to test your knowledge?" />
+            <div className="flex flex-col items-center gap-2 mb-4">
+  <CodeBuddyVisor size="lg" state="success" />
+  <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-4 py-2.5 rounded-2xl bg-secondary text-sm font-medium text-foreground text-center shadow-sm max-w-[220px]">Ready to test your knowledge?</motion.div>
+</div>
             <h2 className="text-xl font-bold mb-2">Ready to Practice?</h2>
             <p className="text-muted-foreground mb-6 text-center">
               Let&apos;s test what you know with a few questions.
@@ -391,7 +394,7 @@ export default function LessonPage() {
                   <span className="text-xs font-medium uppercase tracking-wider text-primary">
                     Quiz • {queue.length} remaining
                   </span>
-                  <CodeBuddy state={codeBuddyState} size="sm" />
+                  <CodeBuddyVisor state={codeBuddyState} size="sm" />
                 </div>
                 <h2 className="text-xl font-bold">{currentExercise.question}</h2>
               </div>
@@ -503,7 +506,7 @@ export default function LessonPage() {
                 <div className="flex items-center gap-2 mb-1">
                   <Check className="w-4 md:w-5 h-4 md:h-5 text-accent shrink-0" />
                   <span className="font-bold text-sm md:text-base text-accent">Correct!</span>
-                  <CodeBuddy state="success" size="sm" className="ml-auto" />
+                  <CodeBuddyVisor state="success" size="sm" className="ml-auto" />
                 </div>
                 <p className="text-xs md:text-sm text-muted-foreground">
                   {currentExercise?.explanation}
@@ -538,7 +541,7 @@ export default function LessonPage() {
                 <div className="flex items-center gap-2">
                   <RefreshCw className="w-4 md:w-5 h-4 md:h-5 text-destructive shrink-0" />
                   <span className="font-bold text-sm md:text-base text-destructive">Not quite — try again</span>
-                  <CodeBuddy state="error" size="sm" className="ml-auto" />
+                  <CodeBuddyVisor state="error" size="sm" className="ml-auto" />
                 </div>
               </motion.div>
             )}
@@ -593,7 +596,10 @@ export default function LessonPage() {
               transition={{ type: "spring", bounce: 0.5 }}
               className="text-center"
             >
-              <CodeBuddy size="lg" state="success" className="mx-auto mb-4" message="You crushed it!" />
+              <div className="flex flex-col items-center gap-2 mx-auto mb-4">
+  <CodeBuddyVisor size="lg" state="success" />
+  <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-4 py-2.5 rounded-2xl bg-secondary text-sm font-medium text-foreground text-center shadow-sm max-w-[220px]">You crushed it!</motion.div>
+</div>
               <h2 className="text-3xl font-extrabold mb-2">Lesson Complete!</h2>
               <p className="text-muted-foreground">
                 Amazing work! Keep the streak going.

@@ -7,7 +7,7 @@ import { Sparkles, Infinity, Code2, Star, Flame, Zap, ChevronRight, AppWindow, S
 import { useStore } from "@/lib/store";
 import ThemeToggle from "@/components/ThemeToggle";
 import Logo from "@/components/ui/Logo";
-import CodeBuddy from "@/components/ui/CodeBuddy";
+import CodeBuddyVisor from "@/components/ui/CodeBuddyVisor";
 
 const languages = [
   { name: "Python", icon: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5", color: "#3776AB" },
@@ -46,7 +46,10 @@ export default function Home() {
         <section className="py-12 md:py-20 px-4 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="relative z-10 max-w-4xl mx-auto">
-            <CodeBuddy size="lg" state="success" className="mx-auto mb-6" message="Your coding companion!" />
+            <div className="flex flex-col items-center gap-2 mx-auto mb-6">
+  <CodeBuddyVisor size="lg" state="success" />
+  <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-4 py-2.5 rounded-2xl bg-secondary text-sm font-medium text-foreground text-center shadow-sm max-w-[220px]">Your coding companion!</motion.div>
+</div>
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
               The free, fun, and effective way
               <br />
@@ -199,7 +202,10 @@ export default function Home() {
 
         {/* CTA */}
         <section className="py-16 px-4 text-center">
-          <CodeBuddy size="md" state="success" className="mx-auto mb-4" message="Ready to start coding?" />
+          <div className="flex flex-col items-center gap-2 mx-auto mb-4">
+  <CodeBuddyVisor size="md" state="success" />
+  <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-4 py-2.5 rounded-2xl bg-secondary text-sm font-medium text-foreground text-center shadow-sm max-w-[220px]">Ready to start coding?</motion.div>
+</div>
           <h2 className="text-3xl font-bold mb-4">Learn to code with OpenCodeLingo</h2>
           {!user ? (
             <Link href="/register" className="btn-3d-primary text-lg px-10 py-4 inline-flex">

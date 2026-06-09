@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Check, ChevronRight } from "lucide-react";
 import AuthGuard from "@/components/AuthGuard";
 import Navigation from "@/components/Navigation";
-import CodeBuddy from "@/components/ui/CodeBuddy";
+import CodeBuddyVisor from "@/components/ui/CodeBuddyVisor";
 import { supabase } from "@/lib/supabase";
 import { useStore } from "@/lib/store";
 import { defaultCourses } from "@/lib/utils";
@@ -63,7 +63,10 @@ export default function CoursesPage() {
           className="py-8"
         >
           <div className="flex items-center gap-4 mb-6">
-            <CodeBuddy size="md" state="success" message="Pick a language and let's start coding!" />
+            <div className="flex flex-col items-center gap-2">
+  <CodeBuddyVisor size="md" state="success" />
+  <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-4 py-2.5 rounded-2xl bg-secondary text-sm font-medium text-foreground text-center shadow-sm max-w-[220px]">Pick a language and let&apos;s start coding!</motion.div>
+</div>
             <div>
               <h1 className="text-3xl font-bold mb-1">Omniverse Course Hub</h1>
               <p className="text-muted-foreground">

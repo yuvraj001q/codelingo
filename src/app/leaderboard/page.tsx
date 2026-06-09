@@ -6,7 +6,7 @@ import { Trophy, Medal, TrendingDown, TrendingUp, Loader2 } from "lucide-react";
 import AuthGuard from "@/components/AuthGuard";
 import Navigation from "@/components/Navigation";
 import TierEmblem from "@/components/ui/TierEmblem";
-import CodeBuddy from "@/components/ui/CodeBuddy";
+import CodeBuddyVisor from "@/components/ui/CodeBuddyVisor";
 import { useStore } from "@/lib/store";
 import { formatXp, getLeagueForXp } from "@/lib/utils";
 
@@ -80,7 +80,10 @@ export default function LeaderboardPage() {
             </div>
           ) : entries.length === 0 ? (
             <div className="text-center py-16">
-              <CodeBuddy state="coding" size="lg" className="mx-auto mb-6" message="No bugs found! You're writing clean code." />
+              <div className="flex flex-col items-center gap-2 mx-auto mb-6">
+  <CodeBuddyVisor state="coding" size="lg" />
+  <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="px-4 py-2.5 rounded-2xl bg-secondary text-sm font-medium text-foreground text-center shadow-sm max-w-[220px]">No bugs found! You&apos;re writing clean code.</motion.div>
+</div>
               <h3 className="text-lg font-bold">No leaderboard data yet</h3>
               <p className="text-sm text-muted-foreground mt-1">Complete lessons to appear here</p>
               {apiError && (
