@@ -44,11 +44,17 @@ const DIFFICULTY_LABELS: Record<number, string> = {
 
 export async function POST(req: NextRequest) {
   try {
-    const { completedLessonIds, difficulty } = await req.json();
+    const { completedLessonIds, difficulty, lessonContext } = await req.json();
     const count = 10;
 
-    const context = buildCurriculumContext(completedLessonIds || []);
-    const language = extractLanguage(completedLessonIds || []);
+    const context = lessonContext || buildCurriculumContext(completedLessonIds || []);
+    const language = lessonContext
+      ? (() => {
+          const map: Record<string, string> = { python: "Python", javascript: "JavaScript", rust: "Rust", cpp: "C++", go: "Go", typescript: "TypeScript" };
+          const m = lessonContext.match(/\[(\w+)\]/);
+          return m && map[m[1]] ? map[m[1]] : extractLanguage(completedLessonIds || []);
+        })()
+      : extractLanguage(completedLessonIds || []);
     const diffLabel = DIFFICULTY_LABELS[difficulty] || DIFFICULTY_LABELS[1];
 
     const apiKey = process.env.OPENAI_API_KEY;
@@ -89,10 +95,10 @@ Rules:
 
 Return ONLY valid JSON array of objects with fields:
 id (string like "ai-q-1"), type ("multiple_choice" | "fill_blank"), question (string), options (string[] or empty array for fill_blank), correct_answer (string), explanation (string), difficulty (number 1-5)`,
-      prompt: `The student has completed these lessons:
+      prompt: `${lessonContext ? "The student is re-learning this lesson topic:" : "The student has completed these lessons:"}
 ${context}
 
-Generate ${count} practice questions in ${language} at difficulty ${difficulty}.`,
+Generate ${count} practice questions in ${language} at difficulty ${difficulty}. Make them different from any typical textbook questions — fresh scenarios each time.`,
     });
 
     let exercises;

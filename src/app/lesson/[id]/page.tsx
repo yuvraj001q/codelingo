@@ -61,28 +61,62 @@ export default function LessonPage() {
   }, [phase, lastInteraction, feedback]);
 
   useEffect(() => {
-    const courseId = (params.id as string).split("-u")[0];
-    const lessonContent = getLessonContent(courseId, params.id as string);
+    const lessonId = params.id as string;
+    const courseId = lessonId.split("-u")[0];
+    const lessonContent = getLessonContent(courseId, lessonId);
 
     if (lessonContent.content.length > 0) {
       setContentItems(lessonContent.content);
     }
 
-    const stored = localStorage.getItem("opencodeLingo_currentExercises");
-    if (stored) {
-      const parsed: Exercise[] = JSON.parse(stored);
-      setExercises(parsed);
-      setQueue(parsed.map((_, i) => i).sort(() => Math.random() - 0.5));
-      return;
+    const isRelearning = (() => {
+      try {
+        const completed: string[] = JSON.parse(localStorage.getItem("opencodeLingo_completedLessons") || "[]");
+        return completed.includes(lessonId);
+      } catch { return false; }
+    })();
+
+    const aiCacheKey = `opencodeLingo_aiExercises_${lessonId}`;
+    const cachedAi = localStorage.getItem(aiCacheKey);
+
+    if (cachedAi) {
+      const parsed: Exercise[] = JSON.parse(cachedAi);
+      if (parsed.length > 0) {
+        setExercises(parsed);
+        setQueue(parsed.map((_, i) => i).sort(() => Math.random() - 0.5));
+        return;
+      }
     }
 
-    if (lessonContent.exercises.length > 0) {
-      setExercises(lessonContent.exercises);
-      localStorage.setItem(
-        "opencodeLingo_currentExercises",
-        JSON.stringify(lessonContent.exercises)
-      );
-      setQueue(lessonContent.exercises.map((_, i) => i).sort(() => Math.random() - 0.5));
+    if (isRelearning && lessonContent.content.length > 0) {
+      const context = lessonContent.content.map((c) => `[${courseId}] ${c.title}: ${c.body.substring(0, 100)}`).join("\n");
+      fetch("/api/generate-practice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lessonContext: context, difficulty: 2, completedLessonIds: [lessonId] }),
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.exercises && data.exercises.length > 0) {
+            const exs = data.exercises.slice(0, 8);
+            setExercises(exs);
+            setQueue(exs.map((_e: Exercise, i: number) => i).sort(() => Math.random() - 0.5));
+            localStorage.setItem(aiCacheKey, JSON.stringify(exs));
+          } else {
+            fallbackExercises(lessonContent);
+          }
+        })
+        .catch(() => fallbackExercises(lessonContent));
+    } else {
+      fallbackExercises(lessonContent);
+    }
+
+    function fallbackExercises(lessonContent: { content: ContentItem[]; exercises: Exercise[] }) {
+      if (lessonContent.exercises.length > 0) {
+        setExercises(lessonContent.exercises);
+        localStorage.setItem("opencodeLingo_currentExercises", JSON.stringify(lessonContent.exercises));
+        setQueue(lessonContent.exercises.map((_, i) => i).sort(() => Math.random() - 0.5));
+      }
     }
   }, [params.id]);
 
